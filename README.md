@@ -38,7 +38,7 @@ A full-stack MERN app for planning an Umrah trip: pick a city and dates, choose 
 | Backend | Node.js, Express 5, Mongoose, JSON Web Tokens, bcryptjs, dotenv, cors |
 | Database | MongoDB Atlas |
 | Testing | Jest, Supertest |
-| Hosting | Vercel (client), Render (server) |
+| Hosting | Vercel (client and serverless API) |
 
 ## Project structure
 
@@ -57,9 +57,11 @@ umrah-trip-planner/
 │   ├── src/models/         User, Hotel, Trip
 │   ├── src/routes/
 │   ├── src/services/       costService, crowdService, checklistService
+│   ├── api/index.js        Vercel serverless entry
 │   ├── src/seed.js         Seeds 8 hotels
+│   └── vercel.json
 │   └── tests/              Jest tests
-├── render.yaml             Render blueprint for the API
+├── render.yaml             Optional Render blueprint for the API
 └── docs/screenshots/
 ```
 
@@ -153,28 +155,33 @@ Example crowd response:
 
 ## Deployment
 
-### Server on Render
+Both the API and the client deploy to **Vercel** as two separate projects from this one repository (free, no card needed).
 
-1. Push this repository to GitHub.
-2. In [Render](https://dashboard.render.com): **New → Blueprint** and select the repository. Render reads `render.yaml` and creates the `umrah-trip-planner-api` web service from `server/`.
-3. Fill in the environment variables it asks for:
+### API on Vercel (serverless)
+
+`server/api/index.js` wraps the Express app as a Vercel serverless function, and `server/vercel.json` routes every path to it. The MongoDB connection is cached between invocations.
+
+1. In [Vercel](https://vercel.com/new) import the repository and set **Root Directory** to `server`. Framework preset: **Other**.
+2. Add environment variables:
    - `MONGO_URI`: your Atlas connection string
-   - `CLIENT_ORIGIN`: your Vercel URL (you can update it after step 2 below)
-   - `JWT_SECRET` is generated automatically.
-4. In Atlas → **Network Access**, allow `0.0.0.0/0` (Render's free tier has no fixed outbound IPs).
-5. Seed the database once from your machine (`npm run seed` with the same `MONGO_URI`) or from the Render shell.
-6. Check `https://<your-service>.onrender.com/api/health` returns `{"status":"ok"}`.
-
-> The free Render plan sleeps after inactivity, so the first request can take ~30 seconds.
+   - `JWT_SECRET`: a long random string
+   - `JWT_EXPIRES_IN`: `7d`
+   - `CLIENT_ORIGIN`: your client's Vercel URL (add it after deploying the client)
+3. In Atlas → **Network Access**, allow `0.0.0.0/0` (Vercel functions have no fixed outbound IPs).
+4. Seed the database once from your machine: `npm run seed` with the same `MONGO_URI` in `server/.env`.
+5. Check `https://<your-api>.vercel.app/api/health` returns `{"status":"ok"}`.
 
 ### Client on Vercel
 
-1. In [Vercel](https://vercel.com/new) import the repository.
-2. Set **Root Directory** to `client`. The framework (Vite) and `vercel.json` are picked up automatically.
-3. Add the environment variable `VITE_API_URL=https://<your-service>.onrender.com`.
-4. Deploy, then put the Vercel URL into `CLIENT_ORIGIN` on Render.
+1. Import the repository again as a second project and set **Root Directory** to `client`. Vite and `client/vercel.json` are picked up automatically.
+2. Add `VITE_API_URL=https://<your-api>.vercel.app`.
+3. Deploy, then put the client URL into `CLIENT_ORIGIN` on the API project and redeploy it.
 
 `client/vercel.json` rewrites all paths to `index.html` so deep links like `/trips/123` work.
+
+### Alternative: API on Render
+
+`render.yaml` is a Render Blueprint that runs the API as a long-lived Node server (`npm start`). Render asks for card verification even on its free plan.
 
 ## Notes
 
