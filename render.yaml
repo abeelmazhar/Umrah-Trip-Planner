@@ -5,6 +5,7 @@ services:
     name: umrah-trip-planner-api
     runtime: node
     plan: free
+    region: singapore
     rootDir: server
     buildCommand: npm ci
     startCommand: npm start
