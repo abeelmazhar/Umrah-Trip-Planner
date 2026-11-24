@@ -61,10 +61,15 @@ function bestTimes(city, date) {
   );
   const best = ranked[0];
 
+  const prayerCrowd = Object.fromEntries(
+    ['fajr', 'dhuhr', 'asr', 'maghrib', 'isha'].map((p) => [p, crowdLevel(d, p).level])
+  );
+
   return {
     city,
     date: pt.date,
     prayerTimes: pt.times,
+    prayerCrowd,
     dayLevel: day.level,
     reasons: day.reasons,
     windows: windows.map(({ start, end, ...w }) => w),

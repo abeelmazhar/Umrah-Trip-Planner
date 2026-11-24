@@ -2,9 +2,11 @@
 const app = require('../src/app');
 const connectDB = require('../src/config/db');
 
+// Endpoints that are pure calculations and never touch the database.
+const NO_DB = ['/api/health', '/api/crowd', '/api/prayer-times', '/api/best-times', '/api/miqat', '/api/meta'];
+
 module.exports = async (req, res) => {
-  // Health check and crowd endpoint don't need the database.
-  const needsDb = !req.url.startsWith('/api/health') && !req.url.startsWith('/api/crowd');
+  const needsDb = !NO_DB.some((p) => req.url.startsWith(p));
   if (needsDb) {
     try {
       await connectDB();
