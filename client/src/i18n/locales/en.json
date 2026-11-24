@@ -1,0 +1,127 @@
+{
+  "app": {
+    "name": "Umrah Trip Planner",
+    "tagline": "Plan your journey to the Two Holy Mosques"
+  },
+  "common": {
+    "loading": "Loading…",
+    "back": "Back",
+    "next": "Next",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "error": "Something went wrong",
+    "sar": "SAR",
+    "language": "Language"
+  },
+  "nav": {
+    "dashboard": "My trips",
+    "newTrip": "New trip",
+    "logout": "Log out",
+    "login": "Log in",
+    "register": "Sign up"
+  },
+  "auth": {
+    "loginTitle": "Welcome back",
+    "loginSubtitle": "Log in to see your Umrah trips",
+    "registerTitle": "Create your account",
+    "registerSubtitle": "Start planning your Umrah in minutes",
+    "name": "Full name",
+    "email": "Email",
+    "password": "Password",
+    "passwordHint": "At least 6 characters",
+    "loginButton": "Log in",
+    "registerButton": "Create account",
+    "noAccount": "Don't have an account?",
+    "haveAccount": "Already have an account?"
+  },
+  "dashboard": {
+    "title": "My trips",
+    "greeting": "Assalamu alaikum, {{name}}",
+    "empty": "You have no trips yet.",
+    "emptyCta": "Plan your first Umrah",
+    "nights_one": "{{count}} night",
+    "nights_other": "{{count}} nights",
+    "people_one": "{{count}} person",
+    "people_other": "{{count}} people",
+    "progress": "{{done}}/{{total}} ready",
+    "confirmDelete": "Delete this trip? This cannot be undone.",
+    "view": "View trip"
+  },
+  "wizard": {
+    "title": "New trip",
+    "steps": {
+      "details": "City & dates",
+      "hotel": "Choose hotel",
+      "review": "Review cost"
+    },
+    "city": "City",
+    "startDate": "Check-in",
+    "endDate": "Check-out",
+    "people": "Travellers",
+    "datesInvalid": "Check-out must be after check-in.",
+    "noHotels": "No hotels found for this city. Did you run the seed script?",
+    "fromHaram": "{{distance}} m from the Haram",
+    "perNight": "{{price}} / room / night",
+    "estimate": "≈ {{price}} before VAT",
+    "selectHotel": "Please choose a hotel.",
+    "summary": "Trip summary",
+    "hotel": "Hotel",
+    "dates": "Dates",
+    "rooms_one": "{{count}} room",
+    "rooms_other": "{{count}} rooms",
+    "roomsNote": "2 travellers per room",
+    "calc": "{{nights}} nights × {{price}} × {{rooms}} rooms",
+    "subtotal": "Subtotal",
+    "vat": "VAT (15%)",
+    "total": "Total",
+    "confirm": "Save trip"
+  },
+  "trip": {
+    "notFound": "Trip not found.",
+    "checklist": "Preparation checklist",
+    "crowd": "Expected crowds at the Haram",
+    "crowdNote": "Estimates only: Fridays, Ramadan and Maghrib/Isha are busiest.",
+    "moreDays": "Showing the first {{count}} days.",
+    "totalCost": "Total cost",
+    "delete": "Delete trip"
+  },
+  "cities": {
+    "Makkah": "Makkah",
+    "Madinah": "Madinah"
+  },
+  "prayers": {
+    "fajr": "Fajr",
+    "dhuhr": "Dhuhr",
+    "asr": "Asr",
+    "maghrib": "Maghrib",
+    "isha": "Isha"
+  },
+  "crowd": {
+    "level": {
+      "High": "High",
+      "Medium": "Medium",
+      "Low": "Low"
+    },
+    "reason": {
+      "friday": "Friday",
+      "ramadan": "Ramadan",
+      "lastTenNights": "Last 10 nights",
+      "eveningPrayer": "Evening prayer",
+      "weekendPrayer": "Weekend"
+    }
+  },
+  "checklist": {
+    "passportValid": "Passport valid for 6+ months",
+    "umrahVisa": "Umrah / tourist visa issued",
+    "flightsBooked": "Flights booked",
+    "vaccinations": "Meningitis (ACYW) vaccination certificate",
+    "nusukPermit": "Nusuk app permits booked",
+    "ihramClothing": "Ihram clothing packed",
+    "learnRituals": "Learned the Umrah rituals and duas",
+    "travelInsurance": "Travel insurance",
+    "currencySAR": "Saudi Riyals / payment card ready",
+    "comfortableSandals": "Comfortable sandals",
+    "medications": "Personal medications",
+    "duaBook": "Dua book or app"
+  }
+}

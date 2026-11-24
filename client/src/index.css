@@ -1,1 +1,40 @@
 @import "tailwindcss";
+
+@theme {
+  --color-brand: #334155;
+  --color-brand-dark: #1e293b;
+  --color-brand-light: #f1f5f9;
+  --color-accent: #64748b;
+  --color-accent-light: #e2e8f0;
+  --color-ink: #0f172a;
+  --color-ink-muted: #64748b;
+  --color-surface: #f8fafc;
+}
+
+@layer base {
+  body {
+    @apply bg-surface text-ink antialiased;
+  }
+}
+
+@utility card {
+  @apply rounded-2xl bg-white p-5 shadow-sm ring-1 ring-black/5;
+}
+@utility btn {
+  @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-50;
+}
+@utility btn-primary {
+  @apply btn bg-brand text-white hover:bg-brand-dark;
+}
+@utility btn-secondary {
+  @apply btn bg-white text-brand ring-1 ring-brand/30 hover:bg-brand-light;
+}
+@utility btn-danger {
+  @apply btn bg-white text-red-700 ring-1 ring-red-200 hover:bg-red-50;
+}
+@utility input {
+  @apply w-full rounded-xl border border-black/10 bg-white px-3 py-2 text-sm outline-none focus:border-brand focus:ring-2 focus:ring-brand/20;
+}
+@utility label {
+  @apply mb-1 block text-sm font-medium text-ink;
+}
