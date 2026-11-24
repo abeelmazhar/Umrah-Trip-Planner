@@ -182,6 +182,3 @@ Example crowd response:
 - Crowd levels are simple rule-based estimates, not live data.
 - `bcryptjs` (a pure-JS bcrypt) is used instead of the native `bcrypt` package so installs work on any platform without build tools; hashes are compatible.
 
-## License
-
-MIT
