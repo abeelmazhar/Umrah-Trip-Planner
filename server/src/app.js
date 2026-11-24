@@ -13,6 +13,7 @@ app.use(express.json());
 app.get('/api/health', (req, res) => res.json({ status: 'ok' }));
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/hotels', require('./routes/hotels'));
+app.use('/api/trips', require('./routes/trips'));
 
 app.use((req, res) => res.status(404).json({ message: 'Not found' }));
 
