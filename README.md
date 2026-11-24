@@ -2,7 +2,7 @@
 
 A full-stack MERN app for planning an Umrah trip: pick a city and dates, choose a hotel near the Haram, see the full cost with VAT, track a preparation checklist and check expected crowd levels for each prayer. Available in **English and Arabic** with a fully mirrored right-to-left layout.
 
-<!-- Live demo: add your Vercel URL here once deployed -->
+**Live demo:** https://umrah-trip-planner.vercel.app · **API:** https://umrah-trip-planner-api.vercel.app/api/health
 
 ## Screenshots
 
