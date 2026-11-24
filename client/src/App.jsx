@@ -6,6 +6,7 @@ import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import NewTrip from './pages/NewTrip';
 import TripDetail from './pages/TripDetail';
+import SharedTrip from './pages/SharedTrip';
 
 export default function App() {
   return (
@@ -13,6 +14,7 @@ export default function App() {
       <Route element={<Layout />}>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/share/:token" element={<SharedTrip />} />
         <Route element={<ProtectedRoute />}>
           <Route path="/" element={<Dashboard />} />
           <Route path="/trips/new" element={<NewTrip />} />

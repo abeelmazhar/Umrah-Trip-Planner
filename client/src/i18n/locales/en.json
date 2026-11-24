@@ -9,9 +9,16 @@
     "next": "Next",
     "cancel": "Cancel",
     "delete": "Delete",
+    "save": "Save",
+    "saved": "Saved",
+    "add": "Add",
+    "remove": "Remove",
     "error": "Something went wrong",
     "sar": "SAR",
-    "language": "Language"
+    "language": "Language",
+    "optional": "optional",
+    "copy": "Copy",
+    "copied": "Copied!"
   },
   "nav": {
     "dashboard": "My trips",
@@ -45,25 +52,66 @@
     "people_other": "{{count}} people",
     "progress": "{{done}}/{{total}} ready",
     "confirmDelete": "Delete this trip? This cannot be undone.",
-    "view": "View trip"
+    "view": "Open trip",
+    "inDays_one": "Departs tomorrow",
+    "inDays_other": "Departs in {{count}} days",
+    "today": "Starts today",
+    "ongoing": "Trip in progress",
+    "past": "Completed",
+    "docIssues_one": "{{count}} document problem",
+    "docIssues_other": "{{count}} document problems",
+    "umrahsDone_one": "{{count}} Umrah completed",
+    "umrahsDone_other": "{{count}} Umrahs completed",
+    "features": {
+      "title": "Everything for your Umrah in one place",
+      "itinerary": "Makkah + Madinah itinerary with train, bus or taxi",
+      "prayer": "Prayer times and the quietest time for Tawaf",
+      "guide": "Step-by-step Umrah guide with Tawaf & Sa'i counters",
+      "budget": "Budget and expense tracker in your currency",
+      "docs": "Passport and vaccine checks for every traveller",
+      "share": "Share your plan with family"
+    }
   },
   "wizard": {
     "title": "New trip",
     "steps": {
-      "details": "City & dates",
-      "hotel": "Choose hotel",
-      "review": "Review cost"
+      "basics": "Travellers",
+      "itinerary": "Itinerary",
+      "hotels": "Hotels",
+      "transport": "Transport",
+      "review": "Review"
     },
+    "tripTitle": "Trip name",
+    "tripTitlePlaceholder": "e.g. Family Umrah, December",
+    "people": "Travellers",
+    "origin": "Travelling from",
+    "originHint": "Used to tell you where to enter ihram (miqat).",
+    "currency": "Your currency",
+    "currencyHint": "Costs are shown in SAR and converted to this currency.",
+    "presets": "Quick start",
+    "presetMakkah": "Makkah only",
+    "presetMadinahFirst": "Madinah → Makkah",
+    "presetMakkahFirst": "Makkah → Madinah",
+    "stay": "Stay {{n}}",
     "city": "City",
     "startDate": "Check-in",
     "endDate": "Check-out",
-    "people": "Travellers",
+    "addStay": "Add another stay",
     "datesInvalid": "Check-out must be after check-in.",
+    "orderInvalid": "Each stay must start on or after the previous check-out.",
+    "itineraryTip": "Most pilgrims spend a few days in Madinah and the rest in Makkah.",
+    "noMakkahWarning": "Your itinerary has no stay in Makkah. Umrah is performed in Makkah.",
+    "chooseHotelFor": "Hotel in {{city}}",
     "noHotels": "No hotels found for this city. Did you run the seed script?",
     "fromHaram": "{{distance}} m from the Haram",
     "perNight": "{{price}} / room / night",
-    "estimate": "≈ {{price}} before VAT",
-    "selectHotel": "Please choose a hotel.",
+    "estimate": "≈ {{price}} for this stay before VAT",
+    "transportFor": "{{from}} → {{to}} on {{date}}",
+    "noTransport": "Your whole trip is in one city, so no intercity transport is needed.",
+    "perPerson": "{{price}} per person",
+    "perVehicle": "{{price}} per car (up to {{seats}} people)",
+    "duration": "about {{h}} h {{m}} min",
+    "groupCost": "Your group: {{price}}",
     "summary": "Trip summary",
     "hotel": "Hotel",
     "dates": "Dates",
@@ -71,26 +119,75 @@
     "rooms_other": "{{count}} rooms",
     "roomsNote": "2 travellers per room",
     "calc": "{{nights}} nights × {{price}} × {{rooms}} rooms",
-    "subtotal": "Subtotal",
-    "vat": "VAT (15%)",
+    "accommodation": "Hotels",
+    "subtotal": "Hotels subtotal",
+    "vat": "VAT on hotels (15%)",
+    "transport": "Transport",
     "total": "Total",
+    "inYourCurrency": "≈ {{amount}} in your currency",
     "confirm": "Save trip"
+  },
+  "transport": {
+    "train": "Haramain train",
+    "bus": "Bus",
+    "taxi": "Private car"
+  },
+  "regions": {
+    "south-asia": "South Asia",
+    "south-east-asia": "South-East Asia",
+    "gulf-east": "Gulf countries",
+    "iraq-iran": "Iraq / Iran",
+    "north-west": "Europe, Egypt, Levant, Americas",
+    "africa-south": "Yemen, East & South Africa"
+  },
+  "miqat": {
+    "title": "Your miqat (where to enter ihram)",
+    "fromMadinah": "You visit Madinah first, so your miqat is Dhul Hulayfah (Abyar Ali), on the edge of Madinah. Buses and cars can stop at its mosque. The Haramain train does not stop there, so if you take the train, put on ihram in Madinah before boarding and make your intention when the train passes the miqat.",
+    "flyingIn": "Your flight passes over this miqat before landing in Jeddah. Wear ihram before boarding or before the crew announces the miqat, and make your intention (niyyah) when it is announced.",
+    "distance": "about {{km}} km from Makkah",
+    "note": "General guidance. Please confirm with your scholar or group leader."
   },
   "trip": {
     "notFound": "Trip not found.",
-    "checklist": "Preparation checklist",
-    "crowd": "Expected crowds at the Haram",
-    "crowdNote": "Estimates only: Fridays, Ramadan and Maghrib/Isha are busiest.",
-    "moreDays": "Showing the first {{count}} days.",
+    "tabs": {
+      "overview": "Overview",
+      "prayer": "Prayer & crowds",
+      "guide": "Umrah guide",
+      "budget": "Budget",
+      "travellers": "Travellers",
+      "checklist": "Checklist"
+    },
+    "itinerary": "Itinerary",
+    "checkIn": "Check-in",
+    "checkOut": "Check-out",
+    "costBreakdown": "Cost breakdown",
     "totalCost": "Total cost",
-    "delete": "Delete trip"
+    "delete": "Delete trip",
+    "checklist": "Preparation checklist",
+    "share": {
+      "title": "Share with family",
+      "desc": "Create a read-only link with your itinerary and hotels. Travellers, budget and expenses stay private.",
+      "create": "Create link",
+      "stop": "Stop sharing"
+    }
   },
-  "cities": {
-    "Makkah": "Makkah",
-    "Madinah": "Madinah"
+  "prayer": {
+    "title": "Prayer times and crowds",
+    "method": "Umm al-Qura method, Saudi time. Crowd levels are estimates.",
+    "bestTime": "Best time for Tawaf",
+    "heat": "Very hot in the afternoon: stay hydrated and avoid midday walks.",
+    "windows": {
+      "morning": "Mid-morning",
+      "afternoon": "Early afternoon",
+      "lateNight": "Late night",
+      "beforeFajr": "Before Fajr"
+    },
+    "inCity": "in {{city}}",
+    "bestVisit": "Quietest time to visit the Prophet's Mosque"
   },
   "prayers": {
     "fajr": "Fajr",
+    "sunrise": "Sunrise",
     "dhuhr": "Dhuhr",
     "asr": "Asr",
     "maghrib": "Maghrib",
@@ -109,6 +206,108 @@
       "eveningPrayer": "Evening prayer",
       "weekendPrayer": "Weekend"
     }
+  },
+  "guide": {
+    "title": "Umrah step by step",
+    "completed_one": "You have completed {{count}} Umrah on this trip. May Allah accept it.",
+    "completed_other": "You have completed {{count}} Umrahs on this trip. May Allah accept them.",
+    "step": "Step {{n}}",
+    "ihram": {
+      "title": "Ihram & intention",
+      "body": "Before the miqat: take a bath (ghusl), men wear two white unstitched cloths, women wear modest everyday clothes. At the miqat make the intention for Umrah and start reciting the Talbiyah.",
+      "done": "I am in ihram"
+    },
+    "talbiyah": "Talbiyah",
+    "talbiyahTranslit": "Labbayk Allahumma labbayk, labbayka la sharika laka labbayk. Innal-hamda wan-ni'mata laka wal-mulk, la sharika lak.",
+    "talbiyahMeaning": "Here I am, O Allah, here I am. Here I am, You have no partner, here I am. All praise, blessings and sovereignty are Yours. You have no partner.",
+    "tawaf": {
+      "title": "Tawaf: 7 rounds around the Ka'bah",
+      "body": "Start at the Black Stone (Hajar al-Aswad), keep the Ka'bah on your left, and walk around it seven times. Tap the button each time you pass the Black Stone.",
+      "dua": "Between the Yemeni corner and the Black Stone"
+    },
+    "sai": {
+      "title": "Sa'i: 7 walks between Safa and Marwah",
+      "body": "After Tawaf (and two rak'ahs of prayer), go to Safa. Each walk from one hill to the other counts as one round. Round 7 ends at Marwah.",
+      "toMarwah": "Safa → Marwah",
+      "toSafa": "Marwah → Safa"
+    },
+    "halq": {
+      "title": "Halq or Taqsir",
+      "body": "Men shave the head (halq) or shorten the hair (taqsir). Women cut a fingertip's length from the end of their hair. Your Umrah is then complete.",
+      "done": "Hair cut / shaved"
+    },
+    "round": "Round {{n}}",
+    "roundDone": "Round done",
+    "undo": "Undo",
+    "ofSeven": "{{n}} of 7",
+    "complete": "Mark this Umrah complete",
+    "reset": "Start over",
+    "lockedTawaf": "Finish ihram first.",
+    "lockedSai": "Finish 7 rounds of Tawaf first.",
+    "lockedHalq": "Finish 7 rounds of Sa'i first."
+  },
+  "budget": {
+    "title": "Budget planner",
+    "estimates": "Your estimates (SAR)",
+    "flightsPerPersonSAR": "Flights, per person",
+    "visaPerPersonSAR": "Visa, per person",
+    "foodPerPersonPerDaySAR": "Food, per person per day",
+    "ziyaratSAR": "Ziyarat tours",
+    "shoppingSAR": "Shopping & gifts",
+    "otherSAR": "Other",
+    "planned": "Planned",
+    "spent": "Spent",
+    "remaining": "Remaining",
+    "over": "Over budget",
+    "total": "Total",
+    "perPerson": "{{amount}} per person",
+    "inCurrency": "≈ {{amount}}",
+    "ratesNote": "Approximate exchange rates ({{asOf}}). 1 SAR ≈ {{rate}} {{code}}.",
+    "addExpense": "Add an expense",
+    "amount": "Amount",
+    "category": "Category",
+    "note": "Note",
+    "expenses": "Expenses",
+    "noExpenses": "No expenses yet.",
+    "categories": {
+      "accommodation": "Hotels",
+      "transport": "Transport",
+      "flights": "Flights",
+      "visa": "Visa",
+      "food": "Food",
+      "ziyarat": "Ziyarat",
+      "shopping": "Shopping",
+      "other": "Other"
+    }
+  },
+  "travellers": {
+    "title": "Travellers & documents",
+    "privacy": "We only store the passport expiry date, never the passport number.",
+    "name": "Name",
+    "gender": "Gender",
+    "male": "Male",
+    "female": "Female",
+    "passportExpiry": "Passport expiry",
+    "vaccine": "Meningitis vaccine",
+    "add": "Add traveller",
+    "allGood": "All documents look fine for this trip.",
+    "issues": {
+      "missingTravellers_one": "Add details for {{count}} more traveller.",
+      "missingTravellers_other": "Add details for {{count}} more travellers.",
+      "passportExpiryMissing": "Passport expiry date missing.",
+      "passportExpired": "Passport will be expired when you travel.",
+      "passportUnder6Months": "Passport must be valid for 6 months after arrival. Renew it before travelling.",
+      "vaccineMissing": "Meningitis (ACYW) vaccine certificate is required for Umrah."
+    }
+  },
+  "share": {
+    "title": "Shared Umrah plan",
+    "readOnly": "Read-only view shared by the traveller.",
+    "notFound": "This shared plan was not found or is no longer shared."
+  },
+  "cities": {
+    "Makkah": "Makkah",
+    "Madinah": "Madinah"
   },
   "checklist": {
     "passportValid": "Passport valid for 6+ months",
