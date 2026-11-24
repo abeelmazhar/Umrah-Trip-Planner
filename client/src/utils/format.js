@@ -1,9 +1,10 @@
-const locale = (lang) => (lang === 'ar' ? 'ar-SA-u-nu-latn' : 'en-GB');
+const locale = (lang) => (lang === 'ar' ? 'ar-SA-u-ca-gregory-nu-latn' : 'en-GB');
 
 export function formatSAR(amount, lang) {
   return new Intl.NumberFormat(locale(lang), {
     style: 'currency',
     currency: 'SAR',
+    minimumFractionDigits: 0,
     maximumFractionDigits: 2,
   }).format(amount);
 }

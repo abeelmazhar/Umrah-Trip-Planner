@@ -14,7 +14,7 @@ function Stepper({ step }) {
         <li key={key} className="flex flex-1 items-center gap-2">
           <span
             className={`grid h-8 w-8 shrink-0 place-items-center rounded-full text-sm font-bold ${
-              i <= step ? 'bg-brand text-white' : 'bg-brand-light text-ink-muted'
+              i < step ? 'bg-brand text-white' : i === step ? 'bg-accent text-brand-dark' : 'bg-brand-light text-ink-muted'
             }`}
           >
             {i + 1}
@@ -135,7 +135,7 @@ function HotelStep({ form, setForm, onBack, onNext }) {
                 <div className="flex-1">
                   <p className="font-semibold">{h.name}</p>
                   <p className="text-sm text-ink-muted">
-                    ★ {h.rating} · {t('wizard.fromHaram', { distance: h.distanceToHaramM.toLocaleString(i18n.language === 'ar' ? 'ar-SA-u-nu-latn' : 'en') })}
+                    ★ {h.rating} · {t('wizard.fromHaram', { distance: h.distanceToHaramM.toLocaleString('en') })}
                   </p>
                 </div>
                 <div className="text-end">

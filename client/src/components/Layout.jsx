@@ -1,6 +1,7 @@
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
+import LanguageSwitcher from './LanguageSwitcher';
 
 const navClass = ({ isActive }) =>
   `rounded-lg px-3 py-1.5 text-sm font-medium transition ${
@@ -19,13 +20,14 @@ export default function Layout() {
 
   return (
     <div className="flex min-h-screen flex-col">
-      <header className="bg-brand text-white">
+      <header className="islamic-pattern border-b-4 border-accent bg-brand text-white">
         <div className="mx-auto flex max-w-5xl flex-wrap items-center gap-3 px-4 py-3">
           <Link to="/" className="flex items-center gap-2 text-lg font-bold">
-            <img src="/kaaba.svg" alt="" className="h-8 w-8" />
+            <img src="/kaaba.svg" alt="" className="h-8 w-8 rounded-md ring-1 ring-accent/60" />
             <span>{t('app.name')}</span>
           </Link>
-          <nav className="ms-auto flex items-center gap-1">
+          <div className="ms-auto flex flex-wrap items-center gap-2">
+          <nav className="flex items-center gap-1">
             {user ? (
               <>
                 <NavLink to="/" end className={navClass}>
@@ -49,6 +51,8 @@ export default function Layout() {
               </>
             )}
           </nav>
+          <LanguageSwitcher />
+          </div>
         </div>
       </header>
       <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-8">

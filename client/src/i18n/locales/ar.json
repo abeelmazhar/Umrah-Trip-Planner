@@ -1,0 +1,139 @@
+{
+  "app": {
+    "name": "مخطط رحلة العمرة",
+    "tagline": "خطّط لرحلتك إلى الحرمين الشريفين"
+  },
+  "common": {
+    "loading": "جارٍ التحميل…",
+    "back": "رجوع",
+    "next": "التالي",
+    "cancel": "إلغاء",
+    "delete": "حذف",
+    "error": "حدث خطأ ما",
+    "sar": "ريال",
+    "language": "اللغة"
+  },
+  "nav": {
+    "dashboard": "رحلاتي",
+    "newTrip": "رحلة جديدة",
+    "logout": "تسجيل الخروج",
+    "login": "تسجيل الدخول",
+    "register": "إنشاء حساب"
+  },
+  "auth": {
+    "loginTitle": "مرحبًا بعودتك",
+    "loginSubtitle": "سجّل الدخول لعرض رحلات العمرة الخاصة بك",
+    "registerTitle": "أنشئ حسابك",
+    "registerSubtitle": "ابدأ التخطيط لعمرتك في دقائق",
+    "name": "الاسم الكامل",
+    "email": "البريد الإلكتروني",
+    "password": "كلمة المرور",
+    "passwordHint": "6 أحرف على الأقل",
+    "loginButton": "دخول",
+    "registerButton": "إنشاء الحساب",
+    "noAccount": "ليس لديك حساب؟",
+    "haveAccount": "لديك حساب بالفعل؟"
+  },
+  "dashboard": {
+    "title": "رحلاتي",
+    "greeting": "السلام عليكم، {{name}}",
+    "empty": "لا توجد لديك رحلات بعد.",
+    "emptyCta": "خطّط لعمرتك الأولى",
+    "nights_zero": "{{count}} ليلة",
+    "nights_one": "ليلة واحدة",
+    "nights_two": "ليلتان",
+    "nights_few": "{{count}} ليالٍ",
+    "nights_many": "{{count}} ليلة",
+    "nights_other": "{{count}} ليلة",
+    "people_zero": "{{count}} شخص",
+    "people_one": "شخص واحد",
+    "people_two": "شخصان",
+    "people_few": "{{count}} أشخاص",
+    "people_many": "{{count}} شخصًا",
+    "people_other": "{{count}} شخص",
+    "progress": "{{done}}/{{total}} جاهز",
+    "confirmDelete": "هل تريد حذف هذه الرحلة؟ لا يمكن التراجع عن ذلك.",
+    "view": "عرض الرحلة"
+  },
+  "wizard": {
+    "title": "رحلة جديدة",
+    "steps": {
+      "details": "المدينة والتواريخ",
+      "hotel": "اختر الفندق",
+      "review": "مراجعة التكلفة"
+    },
+    "city": "المدينة",
+    "startDate": "تاريخ الوصول",
+    "endDate": "تاريخ المغادرة",
+    "people": "المسافرون",
+    "datesInvalid": "يجب أن يكون تاريخ المغادرة بعد تاريخ الوصول.",
+    "noHotels": "لا توجد فنادق لهذه المدينة. هل شغّلت سكربت البيانات الأولية؟",
+    "fromHaram": "{{distance}} م من الحرم",
+    "perNight": "{{price}} / غرفة / ليلة",
+    "estimate": "≈ {{price}} قبل الضريبة",
+    "selectHotel": "يرجى اختيار فندق.",
+    "summary": "ملخص الرحلة",
+    "hotel": "الفندق",
+    "dates": "التواريخ",
+    "rooms_zero": "{{count}} غرفة",
+    "rooms_one": "غرفة واحدة",
+    "rooms_two": "غرفتان",
+    "rooms_few": "{{count}} غرف",
+    "rooms_many": "{{count}} غرفة",
+    "rooms_other": "{{count}} غرفة",
+    "roomsNote": "مسافران في كل غرفة",
+    "calc": "{{nights}} ليالٍ × {{price}} × {{rooms}} غرف",
+    "subtotal": "المجموع الفرعي",
+    "vat": "ضريبة القيمة المضافة (15%)",
+    "total": "الإجمالي",
+    "confirm": "حفظ الرحلة"
+  },
+  "trip": {
+    "notFound": "الرحلة غير موجودة.",
+    "checklist": "قائمة التجهيز",
+    "crowd": "الازدحام المتوقع في الحرم",
+    "crowdNote": "تقديرات فقط: أيام الجمعة ورمضان وصلاتا المغرب والعشاء هي الأكثر ازدحامًا.",
+    "moreDays": "يتم عرض أول {{count}} يومًا.",
+    "totalCost": "التكلفة الإجمالية",
+    "delete": "حذف الرحلة"
+  },
+  "cities": {
+    "Makkah": "مكة المكرمة",
+    "Madinah": "المدينة المنورة"
+  },
+  "prayers": {
+    "fajr": "الفجر",
+    "dhuhr": "الظهر",
+    "asr": "العصر",
+    "maghrib": "المغرب",
+    "isha": "العشاء"
+  },
+  "crowd": {
+    "level": {
+      "High": "مرتفع",
+      "Medium": "متوسط",
+      "Low": "منخفض"
+    },
+    "reason": {
+      "friday": "الجمعة",
+      "ramadan": "رمضان",
+      "lastTenNights": "العشر الأواخر",
+      "eveningPrayer": "صلاة المساء",
+      "weekendPrayer": "عطلة نهاية الأسبوع"
+    }
+  },
+  "checklist": {
+    "passportValid": "جواز سفر صالح لأكثر من 6 أشهر",
+    "umrahVisa": "تم إصدار تأشيرة العمرة / السياحة",
+    "flightsBooked": "تم حجز الطيران",
+    "vaccinations": "شهادة تطعيم الحمى الشوكية (ACYW)",
+    "nusukPermit": "حجز التصاريح عبر تطبيق نسك",
+    "ihramClothing": "تجهيز ملابس الإحرام",
+    "learnRituals": "تعلّم مناسك العمرة وأدعيتها",
+    "travelInsurance": "تأمين السفر",
+    "currencySAR": "تجهيز الريال السعودي / بطاقة الدفع",
+    "comfortableSandals": "نعال مريحة",
+    "medications": "الأدوية الشخصية",
+    "duaBook": "كتاب أو تطبيق الأدعية"
+  }
+}

@@ -37,7 +37,7 @@ export default function Dashboard() {
           <p className="text-sm text-ink-muted">{t('dashboard.greeting', { name: user?.name })}</p>
           <h1 className="text-3xl font-bold text-brand">{t('dashboard.title')}</h1>
         </div>
-        <Link to="/trips/new" className="btn-primary">+ {t('nav.newTrip')}</Link>
+        <Link to="/trips/new" className="btn-gold">+ {t('nav.newTrip')}</Link>
       </div>
 
       {error && <p role="alert" className="rounded-lg bg-red-50 p-3 text-sm text-red-700">{error}</p>}

@@ -1,5 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import api, { TOKEN_KEY } from '../api/client';
+import i18n from '../i18n';
 
 const AuthContext = createContext(null);
 
@@ -23,7 +24,12 @@ export function AuthProvider({ children }) {
   }, []);
 
   const login = useCallback(
-    (email, password) => api.post('/auth/login', { email, password }).then((r) => handleAuth(r.data)),
+    (email, password) =>
+      api.post('/auth/login', { email, password }).then((r) => {
+        const u = handleAuth(r.data);
+        if (u.preferredLanguage && u.preferredLanguage !== i18n.language) i18n.changeLanguage(u.preferredLanguage);
+        return u;
+      }),
     [handleAuth]
   );
 
