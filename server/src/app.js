@@ -1,12 +1,11 @@
 const express = require('express');
 const cors = require('cors');
 const { getShared } = require('./controllers/tripController');
+const { getLostCard } = require('./controllers/groupController');
 
 const app = express();
 
-const origins = (process.env.CLIENT_ORIGIN || 'http://localhost:5173')
-  .split(',')
-  .map((o) => o.trim());
+const origins = (process.env.CLIENT_ORIGIN || 'http://localhost:5173').split(',').map((o) => o.trim());
 
 app.use(cors({ origin: origins }));
 app.use(express.json({ limit: '100kb' }));
@@ -15,11 +14,14 @@ app.get('/api/health', (req, res) => res.json({ status: 'ok' }));
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/hotels', require('./routes/hotels'));
 app.use('/api/trips', require('./routes/trips'));
-app.get('/api/share/:token', getShared);
+app.use('/api/groups', require('./routes/groups'));
+app.get('/api/share/:token', getShared); // public read-only trip
+app.get('/api/lost/:token', getLostCard); // public lost-pilgrim card (QR code)
 app.use('/api', require('./routes/planning')); // crowd, prayer-times, best-times, miqat, meta
 
 app.use((req, res) => res.status(404).json({ message: 'Not found' }));
 
+// Central error handler: controllers just `throw httpError(status, message)`.
 // eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
   if (err.name === 'CastError') return res.status(400).json({ message: 'Invalid id' });

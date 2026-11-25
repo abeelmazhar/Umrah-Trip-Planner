@@ -1,25 +1,13 @@
 // End-to-end API tests against a temporary in-memory MongoDB.
-process.env.JWT_SECRET = 'test-secret';
 const { describe, test, before, after } = require('node:test');
 const { expect } = require('./expect');
-const request = require('supertest');
-const mongoose = require('mongoose');
-const { MongoMemoryServer } = require('mongodb-memory-server-core');
-const app = require('../../src/app');
-const Hotel = require('../../src/models/Hotel');
+const { app, request, mongoose, startDb, stopDb, register, auth } = require('./setup');
 const Trip = require('../../src/models/Trip');
-const hotelsData = require('../../src/data/hotels');
 
-
-let mongod;
 let token;
 let other;
 let makkahHotel;
 let madinahHotel;
-
-const register = async (email) =>
-  (await request(app).post('/api/auth/register').send({ name: 'T', email, password: 'secret1' })).body.token;
-const auth = (t) => ({ Authorization: `Bearer ${t}` });
 
 const tripBody = () => ({
   people: 3,
@@ -33,19 +21,14 @@ const tripBody = () => ({
 });
 
 before(async () => {
-  mongod = await MongoMemoryServer.create();
-  await mongoose.connect(mongod.getUri());
-  const hotels = await Hotel.insertMany(hotelsData);
+  const hotels = await startDb();
   makkahHotel = hotels.find((h) => h.city === 'Makkah');
   madinahHotel = hotels.find((h) => h.city === 'Madinah');
   token = await register('a@test.dev');
   other = await register('b@test.dev');
 });
 
-after(async () => {
-  await mongoose.disconnect();
-  await mongod.stop();
-});
+after(stopDb);
 
 describe('multi-city trips', () => {
   let trip;

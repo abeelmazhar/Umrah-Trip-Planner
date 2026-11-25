@@ -8,9 +8,9 @@
     "start": "node src/index.js",
     "dev": "node --watch src/index.js",
     "seed": "node src/seed.js",
-    "test": "jest && node --test tests/integration/trips.itest.js",
+    "test": "jest && node --test --test-concurrency=1 \"tests/integration/*.itest.js\"",
     "test:unit": "jest",
-    "test:integration": "node --test --test-reporter=spec tests/integration/trips.itest.js"
+    "test:integration": "node --test --test-concurrency=1 --test-reporter=spec \"tests/integration/*.itest.js\""
   },
   "engines": {
     "node": ">=18"

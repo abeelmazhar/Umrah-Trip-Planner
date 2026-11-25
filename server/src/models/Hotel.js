@@ -3,6 +3,8 @@ const mongoose = require('mongoose');
 const hotelSchema = new mongoose.Schema(
   {
     name: { type: String, required: true, trim: true },
+    nameAr: { type: String, trim: true },
+    addressAr: { type: String, trim: true },
     city: { type: String, enum: ['Makkah', 'Madinah'], required: true },
     distanceToHaramM: { type: Number, required: true, min: 0 },
     pricePerNightSAR: { type: Number, required: true, min: 0 },
