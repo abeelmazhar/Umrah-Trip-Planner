@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import api from '../api/client';
+import useFetch from '../hooks/useFetch';
+import { Loading, Section } from '../components/ui';
 import { Itinerary } from '../components/trip/OverviewTab';
 import PrayerTab from '../components/trip/PrayerTab';
 import { formatDate } from '../utils/format';
@@ -10,18 +10,13 @@ import { formatDate } from '../utils/format';
 export default function SharedTrip() {
   const { token } = useParams();
   const { t, i18n } = useTranslation();
-  const [trip, setTrip] = useState(null);
-  const [missing, setMissing] = useState(false);
+  const lang = i18n.language;
+  const { data: trip, loading } = useFetch(`/share/${token}`);
 
-  useEffect(() => {
-    api.get(`/share/${token}`).then((r) => setTrip(r.data)).catch(() => setMissing(true));
-  }, [token]);
-
-  if (missing) return <div className="card text-center">{t('share.notFound')}</div>;
-  if (!trip) return <p className="text-ink-muted">{t('common.loading')}</p>;
+  if (loading) return <Loading />;
+  if (!trip) return <div className="card text-center">{t('share.notFound')}</div>;
 
   const route = trip.stays.map((s) => t(`cities.${s.city}`)).join(' → ');
-  const lang = i18n.language;
 
   return (
     <div className="space-y-5">
@@ -34,10 +29,9 @@ export default function SharedTrip() {
         {trip.completedUmrahs > 0 && <p className="mt-1 text-sm font-semibold text-brand">🤲 {t('dashboard.umrahsDone', { count: trip.completedUmrahs })}</p>}
         <p className="mt-2 text-xs text-ink-muted">{t('share.readOnly')}</p>
       </header>
-      <section className="card">
-        <h2 className="mb-4 text-lg font-bold">{t('trip.itinerary')}</h2>
+      <Section title={t('trip.itinerary')}>
         <Itinerary stays={trip.stays} transfers={trip.transfers} lang={lang} />
-      </section>
+      </Section>
       <PrayerTab trip={{ _id: token, stays: trip.stays }} />
     </div>
   );

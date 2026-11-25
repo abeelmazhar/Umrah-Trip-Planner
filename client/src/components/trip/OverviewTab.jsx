@@ -4,7 +4,9 @@ import api, { errorMessage } from '../../api/client';
 import MiqatCard from '../MiqatCard';
 import { formatDate, formatMoney, formatSAR } from '../../utils/format';
 
-const MODE_ICON = { train: '🚄', bus: '🚌', taxi: '🚗' };
+import { MODE_ICON } from '../../utils/itinerary';
+
+const hotelName = (h, lang) => (lang === 'ar' && h?.nameAr) || h?.name || '';
 
 export function Itinerary({ stays, transfers, lang }) {
   const { t } = useTranslation();
@@ -21,7 +23,7 @@ export function Itinerary({ stays, transfers, lang }) {
           <li key={k} className="relative">
             <span className="absolute -start-[1.72rem] top-1 grid h-5 w-5 place-items-center rounded-full bg-brand text-[10px] text-white">{it.i + 1}</span>
             <p className="font-semibold text-brand">{t(`cities.${it.s.city}`)} · {t('dashboard.nights', { count: it.s.nights })}</p>
-            <p className="text-sm">{it.s.hotelId?.name || it.s.hotel?.name}</p>
+            <p className="text-sm">{hotelName(it.s.hotelId?.name ? it.s.hotelId : it.s.hotel, lang)}</p>
             <p className="text-xs text-ink-muted">
               {formatDate(it.s.checkIn, lang, { weekday: 'short', day: 'numeric', month: 'short' })} → {formatDate(it.s.checkOut, lang, { weekday: 'short', day: 'numeric', month: 'short' })}
               {(it.s.hotelId?.distanceToHaramM ?? it.s.hotel?.distanceToHaramM) !== undefined &&

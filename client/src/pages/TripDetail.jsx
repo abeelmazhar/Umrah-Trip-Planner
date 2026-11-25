@@ -1,7 +1,9 @@
-import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import api, { errorMessage } from '../api/client';
+import useFetch from '../hooks/useFetch';
+import { Alert, Loading } from '../components/ui';
+import Tabs from '../components/Tabs';
 import OverviewTab from '../components/trip/OverviewTab';
 import PrayerTab from '../components/trip/PrayerTab';
 import GuideTab from '../components/trip/GuideTab';
@@ -10,24 +12,23 @@ import TravellersTab from '../components/trip/TravellersTab';
 import ChecklistTab from '../components/trip/ChecklistTab';
 import { formatDate, formatMoney, formatSAR } from '../utils/format';
 
-const TABS = ['overview', 'prayer', 'guide', 'budget', 'travellers', 'checklist'];
+const TABS = {
+  overview: OverviewTab,
+  prayer: PrayerTab,
+  guide: GuideTab,
+  budget: BudgetTab,
+  travellers: TravellersTab,
+  checklist: ChecklistTab,
+};
 
 export default function TripDetail() {
   const { id } = useParams();
   const { t, i18n } = useTranslation();
+  const lang = i18n.language;
   const navigate = useNavigate();
   const [params, setParams] = useSearchParams();
-  const tab = TABS.includes(params.get('tab')) ? params.get('tab') : 'overview';
-  const [trip, setTrip] = useState(null);
-  const [error, setError] = useState('');
-  const lang = i18n.language;
-
-  useEffect(() => {
-    api
-      .get(`/trips/${id}`)
-      .then((res) => setTrip(res.data))
-      .catch((err) => setError(err.response?.status === 404 ? t('trip.notFound') : errorMessage(err, t('common.error'))));
-  }, [id, t]);
+  const tab = TABS[params.get('tab')] ? params.get('tab') : 'overview';
+  const { data: trip, setData: setTrip, error, setError, status, loading } = useFetch(`/trips/${id}`);
 
   const remove = async () => {
     if (!window.confirm(t('dashboard.confirmDelete'))) return;
@@ -39,28 +40,27 @@ export default function TripDetail() {
     }
   };
 
-  if (error && !trip) {
+  if (loading) return <Loading />;
+  if (!trip) {
     return (
       <div className="card text-center">
-        <p className="mb-4">{error}</p>
+        <p className="mb-4">{status === 404 ? t('trip.notFound') : error}</p>
         <Link to="/" className="btn-secondary">{t('common.back')}</Link>
       </div>
     );
   }
-  if (!trip) return <p className="text-ink-muted">{t('common.loading')}</p>;
 
   const { insights } = trip;
+  const route = insights.route.map((c) => t(`cities.${c}`)).join(' → ');
   const docErrors = insights.documents.issues.filter((i) => i.severity === 'error').length;
-  const props = { trip, setTrip, setError };
+  const TabPanel = TABS[tab];
 
   return (
     <div className="space-y-5">
       <header className="card flex flex-wrap items-center gap-4 border-s-4 border-accent">
         <div className="flex-1">
-          <p className="text-xs font-semibold uppercase tracking-wide text-accent-dark">
-            {insights.route.map((c) => t(`cities.${c}`)).join(' → ')}
-          </p>
-          <h1 className="text-2xl font-bold text-brand">{trip.title || insights.route.map((c) => t(`cities.${c}`)).join(' → ')}</h1>
+          <p className="text-xs font-semibold uppercase tracking-wide text-accent-dark">{route}</p>
+          <h1 className="text-2xl font-bold text-brand">{trip.title || route}</h1>
           <p className="text-sm text-ink-muted">
             {formatDate(trip.startDate, lang)} – {formatDate(trip.endDate, lang)} · {t('dashboard.nights', { count: insights.nights })} ·{' '}
             {t('dashboard.people', { count: trip.people })}
@@ -75,27 +75,15 @@ export default function TripDetail() {
         </div>
       </header>
 
-      {error && <p role="alert" className="rounded-lg bg-red-50 p-2 text-sm text-red-700">{error}</p>}
+      <Alert>{error}</Alert>
 
-      <nav role="tablist" className="-mx-1 flex gap-1 overflow-x-auto px-1 pb-1">
-        {TABS.map((key) => (
-          <button key={key} role="tab" type="button" aria-selected={tab === key} onClick={() => setParams({ tab: key }, { replace: true })}
-            className={`relative whitespace-nowrap rounded-xl px-4 py-2 text-sm font-semibold transition ${tab === key ? 'bg-brand text-white' : 'bg-white text-ink ring-1 ring-brand/15 hover:bg-brand-light'}`}>
-            {t(`trip.tabs.${key}`)}
-            {key === 'travellers' && docErrors > 0 && (
-              <span className="ms-1 inline-grid h-5 min-w-5 place-items-center rounded-full bg-red-600 px-1 text-xs text-white">{docErrors}</span>
-            )}
-          </button>
-        ))}
-      </nav>
-
+      <Tabs
+        tabs={Object.keys(TABS).map((key) => ({ key, label: t(`trip.tabs.${key}`), badge: key === 'travellers' ? docErrors : 0 }))}
+        active={tab}
+        onChange={(key) => setParams({ tab: key }, { replace: true })}
+      />
       <div role="tabpanel">
-        {tab === 'overview' && <OverviewTab {...props} />}
-        {tab === 'prayer' && <PrayerTab {...props} />}
-        {tab === 'guide' && <GuideTab {...props} />}
-        {tab === 'budget' && <BudgetTab {...props} />}
-        {tab === 'travellers' && <TravellersTab {...props} />}
-        {tab === 'checklist' && <ChecklistTab {...props} />}
+        <TabPanel trip={trip} setTrip={setTrip} setError={setError} />
       </div>
 
       <div className="flex justify-between">

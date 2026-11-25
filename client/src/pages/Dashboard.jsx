@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import api, { errorMessage } from '../api/client';
+import useFetch from '../hooks/useFetch';
+import { Alert, Loading } from '../components/ui';
 import { useAuth } from '../context/AuthContext';
 import { daysUntil, formatDate, formatMoney, formatSAR } from '../utils/format';
 
@@ -35,16 +36,9 @@ function Countdown({ trip }) {
 export default function Dashboard() {
   const { t, i18n } = useTranslation();
   const { user } = useAuth();
-  const [trips, setTrips] = useState(null);
-  const [error, setError] = useState('');
+  const { data: trips, setData: setTrips, error, setError, loading } = useFetch('/trips');
   const lang = i18n.language;
 
-  useEffect(() => {
-    api
-      .get('/trips')
-      .then((res) => setTrips(res.data))
-      .catch((err) => setError(errorMessage(err, t('common.error'))));
-  }, [t]);
 
   const remove = async (id) => {
     if (!window.confirm(t('dashboard.confirmDelete'))) return;
@@ -66,8 +60,8 @@ export default function Dashboard() {
         <Link to="/trips/new" className="btn-gold">+ {t('nav.newTrip')}</Link>
       </div>
 
-      {error && <p role="alert" className="rounded-lg bg-red-50 p-3 text-sm text-red-700">{error}</p>}
-      {!trips && !error && <p className="text-ink-muted">{t('common.loading')}</p>}
+      <Alert>{error}</Alert>
+      {loading && <Loading />}
 
       {trips?.length === 0 && (
         <div className="card">
