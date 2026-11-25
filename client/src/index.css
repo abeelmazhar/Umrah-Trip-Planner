@@ -59,3 +59,17 @@
 @utility islamic-pattern {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cg fill='none' stroke='%23c9a227' stroke-opacity='0.18'%3E%3Crect x='12' y='12' width='16' height='16'/%3E%3Crect x='12' y='12' width='16' height='16' transform='rotate(45 20 20)'/%3E%3C/g%3E%3C/svg%3E");
 }
+
+/* Printing a lost card: only the card, with its colours. */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  body {
+    background: #fff;
+  }
+  .lost-card {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+}

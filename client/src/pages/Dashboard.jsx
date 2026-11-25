@@ -13,6 +13,7 @@ const FEATURES = [
   ['💰', 'budget'],
   ['🛂', 'docs'],
   ['👨‍👩‍👧', 'share'],
+  ['🧭', 'group'],
 ];
 
 function Countdown({ trip }) {

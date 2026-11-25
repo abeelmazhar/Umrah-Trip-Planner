@@ -20,7 +20,7 @@ export default function Layout() {
 
   return (
     <div className="flex min-h-screen flex-col">
-      <header className="islamic-pattern border-b-4 border-accent bg-brand text-white">
+      <header className="no-print islamic-pattern border-b-4 border-accent bg-brand text-white">
         <div className="mx-auto flex max-w-5xl flex-wrap items-center gap-3 px-4 py-3">
           <Link to="/" className="flex items-center gap-2 text-lg font-bold">
             <img src="/kaaba.svg" alt="" className="h-8 w-8 rounded-md ring-1 ring-accent/60" />
@@ -32,6 +32,9 @@ export default function Layout() {
               <>
                 <NavLink to="/" end className={navClass}>
                   {t('nav.dashboard')}
+                </NavLink>
+                <NavLink to="/groups" className={navClass}>
+                  {t('nav.groups')}
                 </NavLink>
                 <NavLink to="/trips/new" className={navClass}>
                   {t('nav.newTrip')}
@@ -58,7 +61,7 @@ export default function Layout() {
       <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-8">
         <Outlet />
       </main>
-      <footer className="py-6 text-center text-xs text-ink-muted">{t('app.tagline')}</footer>
+      <footer className="no-print py-6 text-center text-xs text-ink-muted">{t('app.tagline')}</footer>
     </div>
   );
 }

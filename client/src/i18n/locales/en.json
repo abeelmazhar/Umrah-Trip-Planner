@@ -25,7 +25,8 @@
     "newTrip": "New trip",
     "logout": "Log out",
     "login": "Log in",
-    "register": "Sign up"
+    "register": "Sign up",
+    "groups": "Groups"
   },
   "auth": {
     "loginTitle": "Welcome back",
@@ -63,13 +64,7 @@
     "umrahsDone_one": "{{count}} Umrah completed",
     "umrahsDone_other": "{{count}} Umrahs completed",
     "features": {
-      "title": "Everything for your Umrah in one place",
-      "itinerary": "Makkah + Madinah itinerary with train, bus or taxi",
-      "prayer": "Prayer times and the quietest time for Tawaf",
-      "guide": "Step-by-step Umrah guide with Tawaf & Sa'i counters",
-      "budget": "Budget and expense tracker in your currency",
-      "docs": "Passport and vaccine checks for every traveller",
-      "share": "Share your plan with family"
+      "group": "Group mode: lost-pilgrim card, meeting points and live location"
     }
   },
   "wizard": {
@@ -322,5 +317,90 @@
     "comfortableSandals": "Comfortable sandals",
     "medications": "Personal medications",
     "duaBook": "Dua book or app"
+  },
+  "groups": {
+    "title": "My groups",
+    "subtitle": "Stay together in the crowds: one code for the whole family or group.",
+    "create": "Create a group",
+    "join": "Join a group",
+    "name": "Group name",
+    "namePlaceholder": "e.g. Khan family",
+    "leaderPhone": "Leader phone (shown on lost cards)",
+    "phone": "Your phone",
+    "phonePlaceholder": "+966 5x xxx xxxx",
+    "linkTrip": "Hotel comes from trip",
+    "noTrip": "No trip linked",
+    "code": "Join code",
+    "codePlaceholder": "e.g. K7P2QM",
+    "empty": "You are not in any group yet.",
+    "leader": "Leader",
+    "member": "Member",
+    "members_one": "{{count}} member",
+    "members_other": "{{count}} members",
+    "sharing_one": "{{count}} sharing location",
+    "sharing_other": "{{count}} sharing location",
+    "next": "Next meeting",
+    "joinTitle": "Join \"{{code}}\"",
+    "joinDesc": "Join this group to get your lost card, meeting points and to see your group on the map.",
+    "joinButton": "Join group",
+    "tabs": {
+      "members": "Members",
+      "meeting": "Meeting points",
+      "card": "My lost card",
+      "settings": "Settings"
+    },
+    "invite": "Invite",
+    "inviteDesc": "Share the code or let them scan the QR code.",
+    "copyLink": "Copy invite link",
+    "newCode": "New code",
+    "newCodeConfirm": "Create a new code? The old code will stop working.",
+    "you": "you",
+    "callLabel": "Call",
+    "lastSeen": "Shared {{time}}",
+    "stale": "old position",
+    "openMap": "Open in Maps",
+    "distanceFromYou": "{{distance}} from you",
+    "notSharing": "not sharing",
+    "shareTitle": "Share my live location",
+    "shareDesc": "Your group sees where you are until the timer ends. Keep this page open so it stays up to date.",
+    "shareFor": "{{minutes}} min",
+    "sharingUntil": "Sharing until {{time}}",
+    "stopSharing": "Stop sharing",
+    "geoDenied": "Location permission was denied. Allow it in your browser settings.",
+    "geoUnavailable": "Location is not available on this device.",
+    "hotelToday": "Group hotel today",
+    "noHotel": "The leader has not linked a trip yet, so no hotel is shown.",
+    "meeting": {
+      "title": "Title",
+      "titlePlaceholder": "e.g. After Isha",
+      "place": "Place",
+      "placePlaceholder": "e.g. Gate 79 (King Fahd Gate)",
+      "time": "Time",
+      "note": "Note",
+      "add": "Add meeting point",
+      "empty": "No meeting points yet.",
+      "past": "past",
+      "anytime": "any time"
+    },
+    "card": {
+      "desc": "Show this card to Haram security, police or a taxi driver if you are separated from your group. Scanning the QR code opens it online.",
+      "print": "Print card",
+      "open": "Open public card"
+    },
+    "settings": {
+      "saveGroup": "Save group",
+      "myDetails": "My details",
+      "saveMe": "Save",
+      "leave": "Leave group",
+      "leaveConfirm": "Leave this group?",
+      "remove": "Remove",
+      "removeConfirm": "Remove {{name}} from the group?",
+      "deleteGroup": "Delete group",
+      "deleteConfirm": "Delete this group for everyone?"
+    },
+    "privacy": "Only your group sees your phone and location. Location sharing always switches off by itself."
+  },
+  "lost": {
+    "notFound": "This card was not found."
   }
 }
