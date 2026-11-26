@@ -1,6 +1,8 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import api, { errorMessage } from '../../api/client';
+import usePushNotifications from '../../hooks/usePushNotifications';
 import { Field, Section } from '../ui';
 
 function MeetingForm({ groupId, onSaved, onError }) {
@@ -43,6 +45,7 @@ function MeetingForm({ groupId, onSaved, onError }) {
 
 export default function MeetingTab({ group, setGroup, setError }) {
   const { t, i18n } = useTranslation();
+  const { subscribed } = usePushNotifications();
   const fmt = (d) =>
     new Intl.DateTimeFormat(i18n.language === 'ar' ? 'ar-SA-u-ca-gregory-nu-latn' : 'en-GB', {
       weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit',
@@ -70,6 +73,14 @@ export default function MeetingTab({ group, setGroup, setError }) {
                   <p className="font-bold text-brand">{p.place}</p>
                   <p className="text-sm">{p.title}{p.note && ` · ${p.note}`}</p>
                   <p className="text-xs text-ink-muted">{p.time ? fmt(p.time) : t('groups.meeting.anytime')}{past && ` · ${t('groups.meeting.past')}`}</p>
+                  {p.time && !past && subscribed === true && (
+                    <p className="mt-1 text-xs text-brand">{t('notifications.meetingHint')}</p>
+                  )}
+                  {p.time && !past && subscribed === false && (
+                    <Link to="/settings/notifications" className="mt-1 inline-block text-xs font-semibold text-brand hover:underline">
+                      {t('notifications.turnOn')}
+                    </Link>
+                  )}
                 </div>
                 {group.isLeader && (
                   <button type="button" className="text-sm text-red-700 hover:underline" onClick={() => remove(p._id)}>

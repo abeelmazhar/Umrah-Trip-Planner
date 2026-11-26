@@ -36,6 +36,9 @@ export default function Layout() {
                 <NavLink to="/groups" className={navClass}>
                   {t('nav.groups')}
                 </NavLink>
+                <NavLink to="/settings/notifications" className={navClass}>
+                  {t('nav.reminders')}
+                </NavLink>
                 <NavLink to="/trips/new" className={navClass}>
                   {t('nav.newTrip')}
                 </NavLink>

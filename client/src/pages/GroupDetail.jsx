@@ -10,6 +10,7 @@ import LostCardView from '../components/group/LostCardView';
 import MembersTab from '../components/group/MembersTab';
 import MeetingTab from '../components/group/MeetingTab';
 import SettingsTab from '../components/group/SettingsTab';
+import useMeetingAlarm from '../hooks/useMeetingAlarm';
 
 const REFRESH_MS = 20000; // members' live locations
 
@@ -73,6 +74,7 @@ export default function GroupDetail() {
   const [params, setParams] = useSearchParams();
   const tab = TABS[params.get('tab')] ? params.get('tab') : 'members';
   const { data: group, setData: setGroup, error, setError, loading, reload } = useFetch(`/groups/${id}`);
+  const alarm = useMeetingAlarm(group);
 
   // Refresh quietly so members' locations and new meeting points appear without reloading.
   useEffect(() => {
@@ -123,6 +125,7 @@ export default function GroupDetail() {
       </div>
 
       <Alert className="no-print">{error}</Alert>
+      <Alert kind="warning" className="no-print">{alarm}</Alert>
 
       <div className="no-print">
         <Tabs

@@ -26,7 +26,8 @@
     "logout": "Log out",
     "login": "Log in",
     "register": "Sign up",
-    "groups": "Groups"
+    "groups": "Groups",
+    "reminders": "Reminders"
   },
   "auth": {
     "loginTitle": "Welcome back",
@@ -402,5 +403,37 @@
   },
   "lost": {
     "notFound": "This card was not found."
+  },
+  "notifications": {
+    "title": "Reminders",
+    "why": "Get a reminder 5 minutes before your group's meeting time.",
+    "enable": "Turn on reminders",
+    "disable": "Turn off on this device",
+    "on": "This device will receive reminders.",
+    "test": "Send test notification",
+    "testSent": "Test sent. If you don't see it, check that notifications are allowed.",
+    "unsupported": "This browser can't receive push reminders.",
+    "denied": "Notifications are blocked. Allow them for this site in your browser settings, then reload this page.",
+    "ios": "On iPhone, reminders work after you add this site to your Home Screen (iOS 16.4 or later). Tap Share, then Add to Home Screen, and open the app from that icon.",
+    "types": "Reminder types",
+    "master": "Reminders enabled",
+    "prayer": "Prayer times",
+    "prayerHint": "Only on days you are in Makkah or Madinah.",
+    "minutesBefore": "Minutes before",
+    "transfers": "Trains, buses and taxis",
+    "checkOut": "Hotel check-out",
+    "passport": "Passport expiry",
+    "nusuk": "Nusuk permit",
+    "meetings": "Group meeting points",
+    "quiet": "Quiet hours",
+    "quietStart": "Start",
+    "quietEnd": "End",
+    "quietHint": "Meeting, travel and Fajr reminders are never silenced.",
+    "save": "Save preferences",
+    "saved": "Preferences saved",
+    "meetingHint": "🔔 You'll be reminded 5 min before",
+    "turnOn": "Turn on reminders",
+    "alarm": "Meeting in 5 minutes",
+    "alarmBody": "{{title}} at {{place}} · {{time}}"
   }
 }

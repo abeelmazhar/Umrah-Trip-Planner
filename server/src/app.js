@@ -15,6 +15,8 @@ app.use('/api/auth', require('./routes/auth'));
 app.use('/api/hotels', require('./routes/hotels'));
 app.use('/api/trips', require('./routes/trips'));
 app.use('/api/groups', require('./routes/groups'));
+app.use('/api/notifications', require('./routes/notifications'));
+app.use('/api/cron', require('./routes/cron'));
 app.get('/api/share/:token', getShared); // public read-only trip
 app.get('/api/lost/:token', getLostCard); // public lost-pilgrim card (QR code)
 app.use('/api', require('./routes/planning')); // crowd, prayer-times, best-times, miqat, meta

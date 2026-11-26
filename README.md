@@ -62,14 +62,15 @@ A full-stack MERN app that helps pilgrims (zaireen) plan and perform Umrah: a **
   - Each member has a random 32-hex `cardToken`; the QR opens a public card that never includes locations or the join code.
   - Live location: only fixed durations (15/30/60/120 min), server-side expiry, positions older than 5 minutes flagged as stale, positions sent at most every 30 s while the page is open, the group page refreshes every 20 s.
   - Hotel Arabic names/addresses fall back to the seed data, so older databases need no migration.
-- **Clean architecture**: thin Express controllers that `throw httpError(...)`; business rules in pure services (`tripService`, `groupService`, `ritualService`, `costService`…) that are unit-tested without a database. Client pages use a `useFetch` hook and shared UI (`Alert`, `Section`, `Field`, `OptionButton`, `Tabs`); the wizard is one component per step; heavy pages are code-split with `React.lazy`.
+- **Reminders (Web Push)**: meeting points 5 minutes ahead, transfers, hotel check-out, passport expiry, the Nusuk permit, and optional prayer times. Rules live in `reminderService` (no database). Delivery is `runDueNotifications(now)`, which is safe to call repeatedly.
+- **Clean architecture**: thin Express controllers that `throw httpError(...)`; business rules in pure services (`tripService`, `groupService`, `ritualService`, `costService`, `reminderService`…) that are unit-tested without a database. Client pages use a `useFetch` hook and shared UI (`Alert`, `Section`, `Field`, `OptionButton`, `Tabs`); the wizard is one component per step; heavy pages are code-split with `React.lazy`.
 
 ## Tech stack
 
 | Layer | Tools |
 | --- | --- |
 | Frontend | React 19, Vite, Tailwind CSS v4, React Router, Axios, i18next / react-i18next |
-| Backend | Node.js, Express 5, Mongoose, JSON Web Tokens, bcryptjs, dotenv, cors |
+| Backend | Node.js, Express 5, Mongoose, JSON Web Tokens, bcryptjs, dotenv, cors, web-push |
 | Database | MongoDB Atlas |
 | Testing | Jest + Supertest (unit / HTTP), Node test runner + mongodb-memory-server (integration) |
 | Hosting | Vercel (client and serverless API), auto-deploy on push |
@@ -86,20 +87,21 @@ umrah-trip-planner/
 │   ├── src/components/trip/       OverviewTab, PrayerTab, GuideTab, BudgetTab, TravellersTab, ChecklistTab
 │   ├── src/components/group/      MembersTab, MeetingTab, SettingsTab, LostCardView, QrCode
 │   ├── src/context/AuthContext.jsx
-│   ├── src/hooks/                 useFetch, useMeta, useLocationSharing
+│   ├── public/                    sw.js, manifest.webmanifest, icons
+│   ├── src/hooks/                 useFetch, useMeta, useLocationSharing, usePushNotifications, useMeetingAlarm
 │   ├── src/i18n/                  en.json, ar.json
 │   ├── src/pages/                 Login, Register, Dashboard, NewTrip, TripDetail, SharedTrip,
-│   │                              Groups, GroupDetail, JoinGroup, LostCard
+│   │                              Groups, GroupDetail, JoinGroup, LostCard, NotificationSettings
 │   ├── src/utils/                 format, itinerary, geo
 │   └── vercel.json
 ├── server/
 │   ├── api/index.js               Vercel serverless entry
 │   ├── src/app.js                 Express app + central error handler
 │   ├── src/controllers/           auth, trip, group (thin: validate → service → respond)
-│   ├── src/models/                User, Hotel, Trip, Group
-│   ├── src/routes/                auth, hotels, trips, groups, planning
+│   ├── src/models/                User, Hotel, Trip, Group, PushSubscription, NotificationLog
+│   ├── src/routes/                auth, hotels, trips, groups, notifications, cron, planning
 │   ├── src/services/              trip, group, ritual, hotel, cost, crowd, prayerTimes, bestTimes,
-│   │                              miqat, budget, currency, document, checklist
+│   │                              miqat, budget, currency, document, checklist, reminder, notification
 │   ├── src/utils/http.js          httpError, validate, assertId, cleanString
 │   ├── src/seed.js                8 hotels (upsert, safe to re-run)
 │   └── tests/                     Jest unit tests + integration/ (node:test, in-memory MongoDB)
@@ -116,7 +118,7 @@ cp server/.env.example server/.env   # fill MONGO_URI and JWT_SECRET
 npm run seed                         # 8 hotels
 npm run dev:server                   # http://localhost:5000
 npm run dev:client                   # http://localhost:5173
-npm test                             # 86 unit + 21 integration tests
+npm test                             # 104 unit + 24 integration tests
 ```
 
 | Variable | Where | Description |
@@ -127,6 +129,10 @@ npm test                             # 86 unit + 21 integration tests
 | `CLIENT_ORIGIN` | server | Allowed CORS origin(s), comma-separated |
 | `PORT` | server (local) | API port, default `5000` |
 | `VITE_API_URL` | client (production) | API base URL; empty locally (Vite proxies `/api`) |
+| `VAPID_PUBLIC_KEY` | server | Web Push public key (`npm run vapid --prefix server`) |
+| `VAPID_PRIVATE_KEY` | server | Web Push private key (secret, never commit it) |
+| `VAPID_SUBJECT` | server | `mailto:` contact shown to the push service |
+| `CRON_SECRET` | server | Bearer token for `POST /api/cron/notifications` (secret) |
 
 ## API
 
@@ -162,18 +168,63 @@ All responses are JSON. 🔒 = requires `Authorization: Bearer <token>`.
 | PUT | `/api/groups/:id/location` | 🔒 | `{ lat, lng, accuracy?, minutes? }` start (with minutes) or update sharing |
 | DELETE | `/api/groups/:id/location` | 🔒 | Stop sharing and forget the position |
 | GET | `/api/lost/:token` | | Public lost card behind the QR code (no location, no join code) |
+| GET | `/api/notifications/vapid-public-key` | | Public key the browser uses to subscribe |
+| POST | `/api/notifications/subscribe` | 🔒 | Upsert this device's push subscription |
+| POST | `/api/notifications/unsubscribe` | 🔒 | `{ endpoint }` remove this device |
+| GET / PUT | `/api/notifications/preferences` | 🔒 | Reminder toggles, prayer lead time, quiet hours |
+| POST | `/api/notifications/test` | 🔒 | Send a test push to the current user's devices |
+| POST | `/api/cron/notifications` | cron | `Authorization: Bearer <CRON_SECRET>`. Runs due reminders. 401 without the secret |
 | GET | `/api/prayer-times?city=&date=&days=` | | Prayer times (up to 31 days) |
 | GET | `/api/best-times?city=&date=&days=` | | Prayer times + crowd per prayer + quiet windows + heat warning |
 | GET | `/api/crowd?date=&prayer=` | | Crowd level for a date (and prayer) |
 | GET | `/api/miqat?origin=&firstCity=` | | Miqat for an origin region and first city |
 | GET | `/api/meta` | | Transport prices, origin regions, currencies, expense categories |
 
+## Reminders & notifications
+
+Reminders are Web Push messages. Times in the text are Saudi time (Asia/Riyadh, UTC+3). A reminder is sent only in a short window after it becomes due (15 minutes, or 5 minutes for a meeting), so a missed cron run does not deliver it hours late. Each reminder has a deterministic key, stored in `NotificationLog` before it is sent, so a second run does not send it again. Editing a meeting time changes the key; deleting the meeting point means it is no longer generated.
+
+| Reminder | When | Notes |
+| --- | --- | --- |
+| Group meeting | 5 minutes before `time` | Urgent. If it was added inside that 5 minutes, it is sent on the next run as long as the time has not passed. |
+| Transfer | 20:00 the evening before, and 2 hours before departure | Departure is 10:00 on the travel date (the itinerary stores a date, not a clock time). "Wear ihram before boarding" is added only for a train/bus/taxi **to Makkah** when ihram is not done yet. |
+| Hotel check-out | 20:00 the evening before, and 09:00 on the day | Names the hotel and city. |
+| Passport | On the next cron run, and again at 09:00 thirty days before the trip | Only when the expiry is less than 6 months after the trip ends. The text names the traveller and nothing else about the passport. |
+| Nusuk permit | 09:00 each day, from 7 days before the start until the start date | Stops once the Nusuk checklist item is done. |
+| Prayer times | `minutesBefore` the selected prayer (default 15, off until you opt in) | Only on days a stay puts you in Makkah or Madinah. |
+
+Quiet hours (off by default, 23:00–04:00) skip the non-urgent reminders. Meeting, transfer and Fajr reminders are never skipped.
+
+**iPhone:** Web Push works only after the site is added to the Home Screen, on iOS 16.4 or later. The settings page explains this when it detects Safari outside the installed app.
+
+### Keys and environment
+
+From the repo root:
+
+```bash
+npm run vapid --prefix server
+```
+
+Put the printed public and private keys in `server/.env` as `VAPID_PUBLIC_KEY` and `VAPID_PRIVATE_KEY`. Set `VAPID_SUBJECT` to a `mailto:` address (a placeholder is fine) and `CRON_SECRET` to a long random string. Do not commit `server/.env`.
+
+On the Vercel **API** project (Root Directory `server`), add the same four variables: `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT`, `CRON_SECRET`. Redeploy after saving them.
+
+Locally, `server/src/index.js` calls `runDueNotifications` every 60 seconds, so reminders work without an external scheduler. The Vercel entry (`server/api/index.js`) does **not** start a timer: a serverless function is frozen between requests, and the Hobby cron limit is once a day.
+
+### cron-job.org (production, every minute)
+
+1. Create a free account at [cron-job.org](https://cron-job.org).
+2. Create a job with URL `https://umrah-trip-planner-api.vercel.app/api/cron/notifications` (your API host + `/api/cron/notifications`).
+3. Method **POST**, schedule **every minute**.
+4. Add the header `Authorization: Bearer <CRON_SECRET>` using the same secret stored in Vercel.
+5. Save. A call without that header gets `401`. The JSON body is `{ checked, sent, skipped, failed }`.
+
 ## Deployment
 
 Two Vercel projects from this one repository (free, no card). Every push to `main` redeploys both.
 
 1. **MongoDB Atlas**: free cluster, database user, Network Access `0.0.0.0/0` (Vercel has no fixed IPs), seed the hotels.
-2. **API**: Vercel project with Root Directory `server`, preset **Other** (so `api/index.js` with the cached DB connection is used). Env: `MONGO_URI`, `JWT_SECRET`, `JWT_EXPIRES_IN`, `CLIENT_ORIGIN`.
+2. **API**: Vercel project with Root Directory `server`, preset **Other** (so `api/index.js` with the cached DB connection is used). Env: `MONGO_URI`, `JWT_SECRET`, `JWT_EXPIRES_IN`, `CLIENT_ORIGIN`, `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT`, `CRON_SECRET`. Then point cron-job.org at `POST /api/cron/notifications` (see above).
 3. **Client**: Vercel project with Root Directory `client` (Vite). Env: `VITE_API_URL`. `client/vercel.json` rewrites deep links to `index.html`.
 4. Put the client URL in the API's `CLIENT_ORIGIN` and redeploy.
 
