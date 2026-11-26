@@ -24,14 +24,14 @@ function planBudget({ people, nights, accommodationSAR, transportSAR, budget = {
   const days = nights + 1;
   const planned = {
     accommodation: round2(accommodationSAR),
-    transport: round2(transportSAR),
-    flights: round2(b.flightsPerPersonSAR * people),
-    visa: round2(b.visaPerPersonSAR * people),
-    food: round2(b.foodPerPersonPerDaySAR * people * days),
-    ziyarat: round2(b.ziyaratSAR),
-    shopping: round2(b.shoppingSAR),
-    other: round2(b.otherSAR),
-  };
+  //   transport: round2(transportSAR),
+  //   flights: round2(b.flightsPerPersonSAR * people),
+  //   visa: round2(b.visaPerPersonSAR * people),
+  //   food: round2(b.foodPerPersonPerDaySAR * people * days),
+  //   ziyarat: round2(b.ziyaratSAR),
+  //   shopping: round2(b.shoppingSAR),
+  //   other: round2(b.otherSAR),
+  // };
   const totalSAR = round2(Object.values(planned).reduce((s, v) => s + v, 0));
   return { planned, totalSAR, perPersonSAR: round2(totalSAR / people), days };
 }
