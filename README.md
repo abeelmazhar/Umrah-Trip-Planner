@@ -63,6 +63,7 @@ A full-stack MERN app that helps pilgrims (zaireen) plan and perform Umrah: a **
   - Live location: only fixed durations (15/30/60/120 min), server-side expiry, positions older than 5 minutes flagged as stale, positions sent at most every 30 s while the page is open, the group page refreshes every 20 s.
   - Hotel Arabic names/addresses fall back to the seed data, so older databases need no migration.
 - **Reminders (Web Push)**: meeting points 5 minutes ahead, transfers, hotel check-out, passport expiry, the Nusuk permit, and optional prayer times. Rules live in `reminderService` (no database). Delivery is `runDueNotifications(now)`, which is safe to call repeatedly.
+- **AI Pilgrim Assistant**: a logged-in chat that answers practical Umrah questions from the selected trip. Answers stream from Claude, are marked as guidance rather than a fatwa, and stop at a daily question limit.
 - **Clean architecture**: thin Express controllers that `throw httpError(...)`; business rules in pure services (`tripService`, `groupService`, `ritualService`, `costService`, `reminderService`…) that are unit-tested without a database. Client pages use a `useFetch` hook and shared UI (`Alert`, `Section`, `Field`, `OptionButton`, `Tabs`); the wizard is one component per step; heavy pages are code-split with `React.lazy`.
 
 ## Tech stack
@@ -70,7 +71,7 @@ A full-stack MERN app that helps pilgrims (zaireen) plan and perform Umrah: a **
 | Layer | Tools |
 | --- | --- |
 | Frontend | React 19, Vite, Tailwind CSS v4, React Router, Axios, i18next / react-i18next |
-| Backend | Node.js, Express 5, Mongoose, JSON Web Tokens, bcryptjs, dotenv, cors, web-push |
+| Backend | Node.js, Express 5, Mongoose, JSON Web Tokens, bcryptjs, dotenv, cors, web-push, @anthropic-ai/sdk |
 | Database | MongoDB Atlas |
 | Testing | Jest + Supertest (unit / HTTP), Node test runner + mongodb-memory-server (integration) |
 | Hosting | Vercel (client and serverless API), auto-deploy on push |
@@ -88,20 +89,22 @@ umrah-trip-planner/
 │   ├── src/components/group/      MembersTab, MeetingTab, SettingsTab, LostCardView, QrCode
 │   ├── src/context/AuthContext.jsx
 │   ├── public/                    sw.js, manifest.webmanifest, icons
-│   ├── src/hooks/                 useFetch, useMeta, useLocationSharing, usePushNotifications, useMeetingAlarm
+│   ├── src/hooks/                 useFetch, useMeta, useLocationSharing, usePushNotifications, useMeetingAlarm, useAssistantChat
 │   ├── src/i18n/                  en.json, ar.json
 │   ├── src/pages/                 Login, Register, Dashboard, NewTrip, TripDetail, SharedTrip,
-│   │                              Groups, GroupDetail, JoinGroup, LostCard, NotificationSettings
+│   │                              Groups, GroupDetail, JoinGroup, LostCard, NotificationSettings, Assistant
 │   ├── src/utils/                 format, itinerary, geo
 │   └── vercel.json
 ├── server/
 │   ├── api/index.js               Vercel serverless entry
 │   ├── src/app.js                 Express app + central error handler
-│   ├── src/controllers/           auth, trip, group (thin: validate → service → respond)
-│   ├── src/models/                User, Hotel, Trip, Group, PushSubscription, NotificationLog
-│   ├── src/routes/                auth, hotels, trips, groups, notifications, cron, planning
+│   ├── src/controllers/           auth, trip, group, notification, assistant (thin: validate → service → respond)
+│   ├── src/models/                User, Hotel, Trip, Group, PushSubscription, NotificationLog,
+│   │                              AssistantConversation, AssistantUsage, AssistantFeedback
+│   ├── src/routes/                auth, hotels, trips, groups, notifications, assistant, cron, planning
 │   ├── src/services/              trip, group, ritual, hotel, cost, crowd, prayerTimes, bestTimes,
-│   │                              miqat, budget, currency, document, checklist, reminder, notification
+│   │                              miqat, budget, currency, document, checklist, reminder, notification,
+│   │                              assistantPrompt, assistant, claudeClient
 │   ├── src/utils/http.js          httpError, validate, assertId, cleanString
 │   ├── src/seed.js                8 hotels (upsert, safe to re-run)
 │   └── tests/                     Jest unit tests + integration/ (node:test, in-memory MongoDB)
@@ -118,7 +121,7 @@ cp server/.env.example server/.env   # fill MONGO_URI and JWT_SECRET
 npm run seed                         # 8 hotels
 npm run dev:server                   # http://localhost:5000
 npm run dev:client                   # http://localhost:5173
-npm test                             # 104 unit + 24 integration tests
+npm test                             # 112 unit + 30 integration tests
 ```
 
 | Variable | Where | Description |
@@ -133,6 +136,9 @@ npm test                             # 104 unit + 24 integration tests
 | `VAPID_PRIVATE_KEY` | server | Web Push private key (secret, never commit it) |
 | `VAPID_SUBJECT` | server | `mailto:` contact shown to the push service |
 | `CRON_SECRET` | server | Bearer token for `POST /api/cron/notifications` (secret) |
+| `ANTHROPIC_API_KEY` | server | Claude API key for the pilgrim assistant (secret, never sent to the browser) |
+| `ASSISTANT_MODEL` | server | Model id, default `claude-opus-5-5` |
+| `ASSISTANT_DAILY_LIMIT` | server | Questions per user per Saudi day, default `30` |
 
 ## API
 
@@ -174,6 +180,10 @@ All responses are JSON. 🔒 = requires `Authorization: Bearer <token>`.
 | GET / PUT | `/api/notifications/preferences` | 🔒 | Reminder toggles, prayer lead time, quiet hours |
 | POST | `/api/notifications/test` | 🔒 | Send a test push to the current user's devices |
 | POST | `/api/cron/notifications` | cron | `Authorization: Bearer <CRON_SECRET>`. Runs due reminders. 401 without the secret |
+| GET | `/api/assistant/status` | 🔒 | `{ enabled, dailyLimit, usedToday }`. `enabled` is false until `ANTHROPIC_API_KEY` is set |
+| GET / DELETE | `/api/assistant/conversation?tripId=` | 🔒 | Saved chat for that trip, or for no trip. 404 if the trip is not yours |
+| POST | `/api/assistant/chat` | 🔒 | `{ question, tripId?, language }` → Server-Sent Events (`delta`, `done`, `refusal`, `error`) |
+| POST | `/api/assistant/feedback` | 🔒 | `{ tripId?, messageIndex, rating: up\|down, comment? }` |
 | GET | `/api/prayer-times?city=&date=&days=` | | Prayer times (up to 31 days) |
 | GET | `/api/best-times?city=&date=&days=` | | Prayer times + crowd per prayer + quiet windows + heat warning |
 | GET | `/api/crowd?date=&prayer=` | | Crowd level for a date (and prayer) |
@@ -219,12 +229,24 @@ Locally, `server/src/index.js` calls `runDueNotifications` every 60 seconds, so 
 4. Add the header `Authorization: Bearer <CRON_SECRET>` using the same secret stored in Vercel.
 5. Save. A call without that header gets `401`. The JSON body is `{ checked, sent, skipped, failed }`.
 
+## AI Pilgrim Assistant
+
+A logged-in page at `/assistant` where a pilgrim asks practical questions (wudu during Tawaf, the way to Masjid Quba, when to leave for Fajr). The reply is in the language of the question. If a trip is selected, the answer can use that trip's cities, dates, hotels, transfers, today's prayer times, and Umrah progress.
+
+Every answer is **guidance, not a fatwa**. The page says so, and religious answers tell the user to confirm with a qualified scholar or the Haram guidance desks. A medical emergency is answered by telling the user to call **911** or **997**.
+
+**Privacy.** The Claude API receives the question, recent chat, and a short trip summary (city, hotel name, distance to the Haram, dates, transfer mode, prayer times, ihram / Tawaf / Sa'i progress, and the app language). It does **not** receive traveller names, passport dates, phone numbers, or emails. The API key stays on the server.
+
+**Cost controls.** Each user gets `ASSISTANT_DAILY_LIMIT` questions per Saudi day (default 30). Answers are asked to stay around 150 words, with `output_config.effort` set to `low` and a short `max_tokens`. The system prompt is a constant, marked for prompt caching, and the trip block sits after that cache breakpoint. Chat is also limited to 10 requests per IP per minute. Without `ANTHROPIC_API_KEY` the routes that call Claude return `503` and the nav link stays hidden.
+
+Create a key at [console.anthropic.com](https://console.anthropic.com/), then set `ANTHROPIC_API_KEY` in `server/.env` (and on the Vercel API project). `ASSISTANT_MODEL` defaults to `claude-opus-5-5`. Redeploy the API after saving the variables. The browser does not need a new env var.
+
 ## Deployment
 
 Two Vercel projects from this one repository (free, no card). Every push to `main` redeploys both.
 
 1. **MongoDB Atlas**: free cluster, database user, Network Access `0.0.0.0/0` (Vercel has no fixed IPs), seed the hotels.
-2. **API**: Vercel project with Root Directory `server`, preset **Other** (so `api/index.js` with the cached DB connection is used). Env: `MONGO_URI`, `JWT_SECRET`, `JWT_EXPIRES_IN`, `CLIENT_ORIGIN`, `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT`, `CRON_SECRET`. Then point cron-job.org at `POST /api/cron/notifications` (see above).
+2. **API**: Vercel project with Root Directory `server`, preset **Other** (so `api/index.js` with the cached DB connection is used). Env: `MONGO_URI`, `JWT_SECRET`, `JWT_EXPIRES_IN`, `CLIENT_ORIGIN`, `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT`, `CRON_SECRET`, `ANTHROPIC_API_KEY`, `ASSISTANT_MODEL`, `ASSISTANT_DAILY_LIMIT`. Then point cron-job.org at `POST /api/cron/notifications` (see above). The assistant function allows 60 seconds (`server/vercel.json`).
 3. **Client**: Vercel project with Root Directory `client` (Vite). Env: `VITE_API_URL`. `client/vercel.json` rewrites deep links to `index.html`.
 4. Put the client URL in the API's `CLIENT_ORIGIN` and redeploy.
 

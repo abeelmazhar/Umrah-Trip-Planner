@@ -75,6 +75,8 @@ export default function TripDetail() {
         </div>
       </header>
 
+      <Link to={`/assistant?trip=${id}`} className="btn-primary">{t('assistant.ask')}</Link>
+
       <Alert>{error}</Alert>
 
       <Tabs

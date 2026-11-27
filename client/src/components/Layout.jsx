@@ -1,6 +1,8 @@
+import { useEffect, useState } from 'react';
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
+import api from '../api/client';
 import LanguageSwitcher from './LanguageSwitcher';
 
 const navClass = ({ isActive }) =>
@@ -12,6 +14,25 @@ export default function Layout() {
   const { t } = useTranslation();
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const [assistantEnabled, setAssistantEnabled] = useState(false);
+
+  useEffect(() => {
+    if (!user) {
+      setAssistantEnabled(false);
+      return undefined;
+    }
+    let active = true;
+    api.get('/assistant/status')
+      .then((res) => {
+        if (active) setAssistantEnabled(Boolean(res.data.enabled));
+      })
+      .catch(() => {
+        if (active) setAssistantEnabled(false);
+      });
+    return () => {
+      active = false;
+    };
+  }, [user]);
 
   const handleLogout = () => {
     logout();
@@ -36,6 +57,11 @@ export default function Layout() {
                 <NavLink to="/groups" className={navClass}>
                   {t('nav.groups')}
                 </NavLink>
+                {assistantEnabled && (
+                  <NavLink to="/assistant" className={navClass}>
+                    {t('nav.assistant')}
+                  </NavLink>
+                )}
                 <NavLink to="/settings/notifications" className={navClass}>
                   {t('nav.reminders')}
                 </NavLink>

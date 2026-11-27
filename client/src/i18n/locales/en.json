@@ -27,7 +27,8 @@
     "login": "Log in",
     "register": "Sign up",
     "groups": "Groups",
-    "reminders": "Reminders"
+    "reminders": "Reminders",
+    "assistant": "Ask the assistant"
   },
   "auth": {
     "loginTitle": "Welcome back",
@@ -435,5 +436,30 @@
     "turnOn": "Turn on reminders",
     "alarm": "Meeting in 5 minutes",
     "alarmBody": "{{title}} at {{place}} · {{time}}"
+  },
+  "assistant": {
+    "ask": "Ask the assistant",
+    "disclaimer": "AI guidance, not a fatwa. For religious rulings, ask a qualified scholar. In an emergency call 911.",
+    "unavailable": "The assistant is not available until an API key is configured on the server.",
+    "trip": "Use a trip for context",
+    "noTrip": "No trip — general questions",
+    "untitled": "Trip",
+    "left": "{{left}} of {{limit}} questions left today",
+    "question": "Your question",
+    "placeholder": "Ask about Umrah, your hotel, or the journey",
+    "send": "Send",
+    "stop": "Stop",
+    "clear": "Clear chat",
+    "mayBeWrong": "AI guidance · may contain mistakes",
+    "truncated": "This answer was cut short.",
+    "helpful": "Helpful",
+    "notHelpful": "Not helpful",
+    "suggestions": {
+      "wudu": "What do I do if I break wudu during Tawaf?",
+      "quba": "How do I get from my hotel to Masjid Quba?",
+      "fajr": "When should I leave for Fajr to find a place inside the Haram?",
+      "miqat": "What is the miqat for my route?",
+      "ihram": "What should I pack for ihram?"
+    }
   }
 }

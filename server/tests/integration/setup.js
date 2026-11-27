@@ -12,12 +12,15 @@ let mongod;
 async function startDb() {
   mongod = await MongoMemoryServer.create();
   await mongoose.connect(mongod.getUri());
+  // Unique keys (notification log, assistant quota) must exist before the first write.
+  await Promise.all(mongoose.modelNames().map((name) => mongoose.model(name).init()));
   return Hotel.insertMany(hotelsData);
 }
 
 async function stopDb() {
   await mongoose.disconnect();
-  await mongod.stop();
+  if (mongod) await mongod.stop();
+  mongod = undefined;
 }
 
 async function register(email, name = 'Tester') {

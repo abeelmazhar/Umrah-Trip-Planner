@@ -16,6 +16,7 @@ const GroupDetail = lazy(() => import('./pages/GroupDetail'));
 const JoinGroup = lazy(() => import('./pages/JoinGroup'));
 const LostCard = lazy(() => import('./pages/LostCard'));
 const NotificationSettings = lazy(() => import('./pages/NotificationSettings'));
+const Assistant = lazy(() => import('./pages/Assistant'));
 
 export default function App() {
   return (
@@ -34,6 +35,7 @@ export default function App() {
             <Route path="/groups/:id" element={<GroupDetail />} />
             <Route path="/join/:code" element={<JoinGroup />} />
             <Route path="/settings/notifications" element={<NotificationSettings />} />
+            <Route path="/assistant" element={<Assistant />} />
           </Route>
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>

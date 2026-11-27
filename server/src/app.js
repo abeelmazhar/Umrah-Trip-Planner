@@ -5,6 +5,9 @@ const { getLostCard } = require('./controllers/groupController');
 
 const app = express();
 
+// The API runs behind Vercel, so req.ip is the visitor rather than the proxy.
+app.set('trust proxy', 1);
+
 const origins = (process.env.CLIENT_ORIGIN || 'http://localhost:5173').split(',').map((o) => o.trim());
 
 app.use(cors({ origin: origins }));
@@ -16,6 +19,7 @@ app.use('/api/hotels', require('./routes/hotels'));
 app.use('/api/trips', require('./routes/trips'));
 app.use('/api/groups', require('./routes/groups'));
 app.use('/api/notifications', require('./routes/notifications'));
+app.use('/api/assistant', require('./routes/assistant'));
 app.use('/api/cron', require('./routes/cron'));
 app.get('/api/share/:token', getShared); // public read-only trip
 app.get('/api/lost/:token', getLostCard); // public lost-pilgrim card (QR code)
