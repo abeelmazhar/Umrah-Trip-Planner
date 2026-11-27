@@ -4,12 +4,22 @@ import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
 import { AssistantDrawerProvider, useAssistantDrawer } from '../context/AssistantDrawerContext';
 import AssistantDrawer from './AssistantDrawer';
+import Icon from './Icon';
 import LanguageSwitcher from './LanguageSwitcher';
 
 const navClass = ({ isActive }) =>
-  `rounded-lg px-3 py-2 text-sm font-medium transition ${
+  `inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition ${
     isActive ? 'bg-white/15 text-white' : 'text-white/80 hover:bg-white/10 hover:text-white'
   }`;
+
+function NavLabel({ icon, mirror, children }) {
+  return (
+    <>
+      <Icon name={icon} className="h-4 w-4" mirror={mirror} />
+      <span className="md:max-lg:sr-only">{children}</span>
+    </>
+  );
+}
 
 export default function Layout() {
   return (
@@ -38,18 +48,18 @@ function LayoutShell() {
 
   const links = user ? (
     <>
-      <NavLink to="/" end className={navClass}>{t('nav.dashboard')}</NavLink>
-      <NavLink to="/groups" className={navClass}>{t('nav.groups')}</NavLink>
-      <NavLink to="/settings/notifications" className={navClass}>{t('nav.reminders')}</NavLink>
-      <NavLink to="/trips/new" className={navClass}>{t('nav.newTrip')}</NavLink>
-      <button type="button" onClick={handleLogout} className="rounded-lg px-3 py-2 text-start text-sm text-white/80 hover:bg-white/10 hover:text-white">
-        {t('nav.logout')}
+      <NavLink to="/" end className={navClass} title={t('nav.dashboard')}><NavLabel icon="home">{t('nav.dashboard')}</NavLabel></NavLink>
+      <NavLink to="/groups" className={navClass} title={t('nav.groups')}><NavLabel icon="users">{t('nav.groups')}</NavLabel></NavLink>
+      <NavLink to="/settings/notifications" className={navClass} title={t('nav.reminders')}><NavLabel icon="bell">{t('nav.reminders')}</NavLabel></NavLink>
+      <NavLink to="/trips/new" className={navClass} title={t('nav.newTrip')}><NavLabel icon="plus">{t('nav.newTrip')}</NavLabel></NavLink>
+      <button type="button" onClick={handleLogout} title={t('nav.logout')} className="inline-flex items-center gap-2 rounded-lg px-3 py-2 text-start text-sm text-white/80 hover:bg-white/10 hover:text-white">
+        <NavLabel icon="logout" mirror>{t('nav.logout')}</NavLabel>
       </button>
     </>
   ) : (
     <>
-      <NavLink to="/login" className={navClass}>{t('nav.login')}</NavLink>
-      <NavLink to="/register" className={navClass}>{t('nav.register')}</NavLink>
+      <NavLink to="/login" className={navClass} title={t('nav.login')}><NavLabel icon="login" mirror>{t('nav.login')}</NavLabel></NavLink>
+      <NavLink to="/register" className={navClass} title={t('nav.register')}><NavLabel icon="plus">{t('nav.register')}</NavLabel></NavLink>
     </>
   );
 
@@ -69,9 +79,10 @@ function LayoutShell() {
               className="rounded-lg px-3 py-2 text-sm font-medium text-white md:hidden"
               aria-expanded={menuOpen}
               aria-controls="mobile-nav"
+              aria-label={menuOpen ? t('assistant.close') : t('nav.menu')}
               onClick={() => setMenuOpen((value) => !value)}
             >
-              {menuOpen ? t('assistant.close') : t('nav.menu')}
+              <Icon name={menuOpen ? 'close' : 'menu'} />
             </button>
           </div>
         </div>
@@ -90,13 +101,13 @@ function LayoutShell() {
           {!open && (
             <button
               type="button"
-              className="no-print fixed end-4 bottom-[max(1.25rem,env(safe-area-inset-bottom))] z-40 flex items-center gap-2 rounded-full bg-brand px-4 py-3 text-sm font-semibold text-white shadow-lg hover:bg-brand-dark"
+              className="no-print fixed end-4 bottom-[max(1.25rem,env(safe-area-inset-bottom))] z-40 grid h-14 w-14 place-items-center rounded-full bg-brand text-white shadow-lg hover:bg-brand-dark"
               onClick={toggleDrawer}
               aria-expanded={false}
               aria-label={t('nav.assistant')}
+              title={t('nav.assistant')}
             >
-              <span aria-hidden="true">💬</span>
-              <span className="hidden sm:inline">{t('nav.assistant')}</span>
+              <Icon name="chat" className="h-6 w-6" />
             </button>
           )}
           <AssistantDrawer />

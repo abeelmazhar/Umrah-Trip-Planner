@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import api, { errorMessage } from '../../api/client';
 import useMeta from '../../hooks/useMeta';
 import { formatDate, formatMoney, formatSAR } from '../../utils/format';
+import Icon from '../Icon';
 
 const ESTIMATE_KEYS = ['flightsPerPersonSAR', 'visaPerPersonSAR', 'foodPerPersonPerDaySAR', 'ziyaratSAR', 'shoppingSAR', 'otherSAR'];
 
@@ -128,7 +129,9 @@ export default function BudgetTab({ trip, setTrip, setError }) {
                 <span className="flex-1 truncate">{x.note || '—'}</span>
                 <span className="text-xs text-ink-muted">{formatDate(x.date, lang, { day: 'numeric', month: 'short' })}</span>
                 <span className="font-semibold">{formatSAR(x.amountSAR, lang)}</span>
-                <button type="button" onClick={() => removeExpense(x._id)} className="text-red-700 hover:underline" aria-label={t('common.delete')}>✕</button>
+                <button type="button" onClick={() => removeExpense(x._id)} className="rounded-lg p-1.5 text-red-700 hover:bg-red-50" aria-label={t('common.delete')} title={t('common.delete')}>
+                  <Icon name="trash" className="h-4 w-4" />
+                </button>
               </li>
             ))}
           </ul>

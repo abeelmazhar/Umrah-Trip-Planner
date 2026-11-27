@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import api, { errorMessage } from '../api/client';
 import useFetch from '../hooks/useFetch';
 import { Alert, Loading } from '../components/ui';
+import Icon from '../components/Icon';
 import { useAuth } from '../context/AuthContext';
 import { daysUntil, formatDate, formatMoney, formatSAR } from '../utils/format';
 
@@ -58,7 +59,7 @@ export default function Dashboard() {
           <p className="text-sm text-ink-muted">{t('dashboard.greeting', { name: user?.name })}</p>
           <h1 className="text-2xl font-bold text-brand sm:text-3xl">{t('dashboard.title')}</h1>
         </div>
-        <Link to="/trips/new" className="btn-gold">+ {t('nav.newTrip')}</Link>
+        <Link to="/trips/new" className="btn-gold"><Icon name="plus" className="h-4 w-4" />{t('nav.newTrip')}</Link>
       </div>
 
       <Alert>{error}</Alert>
@@ -125,7 +126,9 @@ export default function Dashboard() {
               </div>
               <div className="mt-auto flex gap-2">
                 <Link to={`/trips/${trip._id}`} className="btn-secondary flex-1">{t('dashboard.view')}</Link>
-                <button type="button" onClick={() => remove(trip._id)} className="btn-danger">{t('common.delete')}</button>
+                <button type="button" onClick={() => remove(trip._id)} className="btn-danger !px-3" aria-label={t('common.delete')} title={t('common.delete')}>
+                  <Icon name="trash" className="h-4 w-4" />
+                </button>
               </div>
             </li>
           );

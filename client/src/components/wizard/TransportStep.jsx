@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { Alert, OptionButton } from '../ui';
+import Icon from '../Icon';
 import { WizardNav } from './common';
 import { formatDate, formatSAR } from '../../utils/format';
 import { MODE_ICON, groupCost, transfersNeeded } from '../../utils/itinerary';
@@ -23,7 +24,7 @@ export default function TransportStep({ form, update, meta, onBack, onNext }) {
           <div className="grid gap-3 sm:grid-cols-3">
             {Object.entries(meta.transport).map(([mode, o]) => (
               <OptionButton key={mode} selected={modes[i] === mode} onClick={() => setMode(i, mode)} className="p-4">
-                <p className="text-2xl" aria-hidden="true">{MODE_ICON[mode]}</p>
+                <Icon name={MODE_ICON[mode]} className="mb-1 h-6 w-6 text-brand" />
                 <p className="font-semibold">{t(`transport.${mode}`)}</p>
                 <p className="text-xs text-ink-muted">
                   {o.pricing === 'perVehicle'

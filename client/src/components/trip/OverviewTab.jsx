@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import api, { errorMessage } from '../../api/client';
 import MiqatCard from '../MiqatCard';
+import Icon from '../Icon';
 import { formatDate, formatMoney, formatSAR } from '../../utils/format';
 
 import { MODE_ICON } from '../../utils/itinerary';
@@ -32,7 +33,7 @@ export function Itinerary({ stays, transfers, lang }) {
           </li>
         ) : (
           <li key={k} className="relative rounded-lg bg-accent-light px-3 py-2 text-sm">
-            <span className="absolute -start-[1.72rem] top-2 text-base" aria-hidden="true">{MODE_ICON[it.tr.mode]}</span>
+            <span className="absolute -start-[1.72rem] top-2 text-brand" aria-hidden="true"><Icon name={MODE_ICON[it.tr.mode]} className="h-4 w-4" /></span>
             {t(`transport.${it.tr.mode}`)}: {t(`cities.${it.tr.from}`)} → {t(`cities.${it.tr.to}`)}
             {it.tr.costSAR !== undefined && <span className="text-ink-muted"> · {formatSAR(it.tr.costSAR, lang)}</span>}
           </li>
@@ -77,7 +78,9 @@ function ShareCard({ trip, setTrip, setError }) {
         <div className="space-y-2">
           <input readOnly dir="ltr" className="input text-xs" value={link} onFocus={(e) => e.target.select()} />
           <div className="flex gap-2">
-            <button type="button" className="btn-primary" onClick={copy}>{copied ? t('common.copied') : t('common.copy')}</button>
+            <button type="button" className="btn-primary !px-3" onClick={copy} aria-label={copied ? t('common.copied') : t('common.copy')} title={copied ? t('common.copied') : t('common.copy')}>
+              <Icon name={copied ? 'check' : 'copy'} className="h-4 w-4" />
+            </button>
             <button type="button" className="btn-danger" onClick={stop}>{t('trip.share.stop')}</button>
           </div>
         </div>

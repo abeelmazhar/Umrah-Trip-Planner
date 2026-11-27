@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import api, { errorMessage } from '../../api/client';
 import useFetch from '../../hooks/useFetch';
 import { Field, Section } from '../ui';
+import Icon from '../Icon';
 
 function LeaderSettings({ group, setGroup, setError }) {
   const { t } = useTranslation();
@@ -100,9 +101,9 @@ export default function SettingsTab({ group, setGroup, setError, reload }) {
               {group.members.filter((m) => !m.isMe).map((m) => (
                 <li key={m._id} className="flex items-center justify-between py-2 text-sm">
                   {m.displayName}
-                  <button type="button" className="text-red-700 hover:underline"
+                  <button type="button" className="rounded-lg p-1.5 text-red-700 hover:bg-red-50" aria-label={t('groups.settings.remove')} title={t('groups.settings.remove')}
                     onClick={() => act(t('groups.settings.removeConfirm', { name: m.displayName }), () => api.delete(`/groups/${group._id}/members/${m._id}`), reload)}>
-                    {t('groups.settings.remove')}
+                    <Icon name="trash" className="h-4 w-4" />
                   </button>
                 </li>
               ))}

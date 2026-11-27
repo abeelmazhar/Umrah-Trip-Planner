@@ -5,6 +5,7 @@ import useFetch from '../hooks/useFetch';
 import useAssistantChat from '../hooks/useAssistantChat';
 import { useAssistantDrawer } from '../context/AssistantDrawerContext';
 import { Alert, CardSkeleton } from './ui';
+import Icon from './Icon';
 import { formatDate } from '../utils/format';
 
 const SUGGESTIONS = ['wudu', 'quba', 'fajr', 'miqat', 'ihram'];
@@ -88,8 +89,8 @@ export default function AssistantDrawer() {
     >
       <header className="flex items-center gap-3 border-b border-brand/10 bg-brand px-4 py-3 text-white">
         <h2 className="flex-1 text-base font-bold">{t('nav.assistant')}</h2>
-        <button type="button" className="rounded-lg px-3 py-1.5 text-sm text-white/90 hover:bg-white/10" onClick={closeDrawer}>
-          {t('assistant.close')}
+        <button type="button" className="rounded-lg p-1.5 text-white/90 hover:bg-white/10" onClick={closeDrawer} aria-label={t('assistant.close')} title={t('assistant.close')}>
+          <Icon name="close" />
         </button>
       </header>
 
@@ -151,11 +152,11 @@ export default function AssistantDrawer() {
                     <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-ink-muted">
                       <span>{t('assistant.mayBeWrong')}</span>
                       {message.truncated && <span>{t('assistant.truncated')}</span>}
-                      <button type="button" className={votes[index] === 'up' ? 'font-bold' : ''} aria-label={t('assistant.helpful')} onClick={() => rate(index, 'up')}>
-                        👍
+                      <button type="button" className={`rounded-md p-1 ${votes[index] === 'up' ? 'bg-brand-light text-brand' : ''}`} aria-label={t('assistant.helpful')} title={t('assistant.helpful')} onClick={() => rate(index, 'up')}>
+                        <Icon name="thumbUp" className="h-4 w-4" />
                       </button>
-                      <button type="button" className={votes[index] === 'down' ? 'font-bold' : ''} aria-label={t('assistant.notHelpful')} onClick={() => rate(index, 'down')}>
-                        👎
+                      <button type="button" className={`rounded-md p-1 ${votes[index] === 'down' ? 'bg-red-50 text-red-700' : ''}`} aria-label={t('assistant.notHelpful')} title={t('assistant.notHelpful')} onClick={() => rate(index, 'down')}>
+                        <Icon name="thumbDown" className="h-4 w-4" />
                       </button>
                     </div>
                   )}
@@ -180,14 +181,16 @@ export default function AssistantDrawer() {
           />
           <div className="flex flex-wrap items-center gap-2">
             <span className="text-xs text-ink-muted">{input.length}/1000</span>
-            <button type="button" className="btn-secondary ms-auto" onClick={clear} disabled={streaming || messages.length === 0}>
-              {t('assistant.clear')}
+            <button type="button" className="btn-secondary ms-auto !px-3" onClick={clear} disabled={streaming || messages.length === 0} aria-label={t('assistant.clear')} title={t('assistant.clear')}>
+              <Icon name="trash" className="h-4 w-4" />
             </button>
             {streaming ? (
-              <button type="button" className="btn-danger" onClick={stop}>{t('assistant.stop')}</button>
+              <button type="button" className="btn-danger !px-3" onClick={stop} aria-label={t('assistant.stop')} title={t('assistant.stop')}>
+                <Icon name="stop" className="h-4 w-4" />
+              </button>
             ) : (
-              <button type="submit" className="btn-primary" disabled={input.trim().length < 2 || left === 0}>
-                {t('assistant.send')}
+              <button type="submit" className="btn-primary !px-3" disabled={input.trim().length < 2 || left === 0} aria-label={t('assistant.send')} title={t('assistant.send')}>
+                <Icon name="send" className="h-4 w-4" mirror />
               </button>
             )}
           </div>

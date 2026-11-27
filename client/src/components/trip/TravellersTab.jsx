@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import api, { errorMessage } from '../../api/client';
 import { isoDay } from '../../utils/format';
+import Icon from '../Icon';
 
 const blank = () => ({ name: '', gender: 'male', passportExpiry: '', meningitisVaccine: false });
 
@@ -76,8 +77,8 @@ export default function TravellersTab({ trip, setTrip, setError }) {
                 <input type="checkbox" className="h-4 w-4 accent-brand" checked={x.meningitisVaccine} onChange={(e) => set(i, { meningitisVaccine: e.target.checked })} />
                 {t('travellers.vaccine')}
               </label>
-              <button type="button" className="text-sm text-red-700 hover:underline sm:col-span-1" onClick={() => setList(list.filter((_, j) => j !== i))}>
-                {t('common.remove')}
+              <button type="button" className="rounded-lg p-1.5 text-red-700 hover:bg-red-50 sm:col-span-1" onClick={() => setList(list.filter((_, j) => j !== i))} aria-label={t('common.remove')} title={t('common.remove')}>
+                <Icon name="trash" className="h-4 w-4" />
               </button>
             </div>
             {mine.map((is) => <Issue key={is.code} issue={is} />)}
@@ -86,7 +87,7 @@ export default function TravellersTab({ trip, setTrip, setError }) {
       })}
 
       <div className="flex flex-wrap gap-2">
-        <button type="button" className="btn-secondary" disabled={list.length >= 50} onClick={() => setList([...list, blank()])}>+ {t('travellers.add')}</button>
+        <button type="button" className="btn-secondary" disabled={list.length >= 50} onClick={() => setList([...list, blank()])}><Icon name="plus" className="h-4 w-4" />{t('travellers.add')}</button>
         <button type="submit" className="btn-primary" disabled={saving}>{saving ? t('common.loading') : saved ? `✓ ${t('common.saved')}` : t('common.save')}</button>
       </div>
     </form>

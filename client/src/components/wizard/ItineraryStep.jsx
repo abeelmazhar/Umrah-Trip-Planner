@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { Alert, OptionButton } from '../ui';
+import Icon from '../Icon';
 import { WizardNav } from './common';
 import { nightsBetween, todayISO } from '../../utils/format';
 import { CITIES, MAX_STAYS, nextStay, presetStays, validateStays } from '../../utils/itinerary';
@@ -39,8 +40,8 @@ export default function ItineraryStep({ form, update, onBack, onNext }) {
             <div className="mb-3 flex items-center justify-between">
               <legend className="font-semibold text-brand">{t('wizard.stay', { n: i + 1 })}</legend>
               {stays.length > 1 && (
-                <button type="button" className="text-sm text-red-700 hover:underline" onClick={() => setStays(stays.filter((_, j) => j !== i))}>
-                  {t('common.remove')}
+                <button type="button" className="rounded-lg p-1.5 text-red-700 hover:bg-red-50" onClick={() => setStays(stays.filter((_, j) => j !== i))} aria-label={t('common.remove')} title={t('common.remove')}>
+                  <Icon name="trash" className="h-4 w-4" />
                 </button>
               )}
             </div>
@@ -69,7 +70,7 @@ export default function ItineraryStep({ form, update, onBack, onNext }) {
 
       {stays.length < MAX_STAYS && (
         <button type="button" className="btn-secondary w-full border-dashed" onClick={() => setStays([...stays, nextStay(stays[stays.length - 1])])}>
-          + {t('wizard.addStay')}
+          <Icon name="plus" className="h-4 w-4" />{t('wizard.addStay')}
         </button>
       )}
       {!stays.some((s) => s.city === 'Makkah') && <Alert kind="warning">{t('wizard.noMakkahWarning')}</Alert>}

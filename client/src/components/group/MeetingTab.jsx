@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import api, { errorMessage } from '../../api/client';
 import usePushNotifications from '../../hooks/usePushNotifications';
 import { Field, Section } from '../ui';
+import Icon from '../Icon';
 
 function MeetingForm({ groupId, onSaved, onError }) {
   const { t } = useTranslation();
@@ -83,8 +84,8 @@ export default function MeetingTab({ group, setGroup, setError }) {
                   )}
                 </div>
                 {group.isLeader && (
-                  <button type="button" className="text-sm text-red-700 hover:underline" onClick={() => remove(p._id)}>
-                    {t('common.delete')}
+                  <button type="button" className="rounded-lg p-1.5 text-red-700 hover:bg-red-50" onClick={() => remove(p._id)} aria-label={t('common.delete')} title={t('common.delete')}>
+                    <Icon name="trash" className="h-4 w-4" />
                   </button>
                 )}
               </li>

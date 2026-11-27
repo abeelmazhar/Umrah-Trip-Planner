@@ -2,7 +2,7 @@ import { addDaysISO, nightsBetween, todayISO } from './format';
 
 export const CITIES = ['Makkah', 'Madinah'];
 export const MAX_STAYS = 6;
-export const MODE_ICON = { train: '🚄', bus: '🚌', taxi: '🚗' };
+export const MODE_ICON = { train: 'train', bus: 'bus', taxi: 'car' };
 
 /** One transfer per change of city, mirroring the server's rule. */
 export function transfersNeeded(stays) {

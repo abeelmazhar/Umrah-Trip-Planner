@@ -5,6 +5,7 @@ import api, { errorMessage } from '../api/client';
 import useFetch from '../hooks/useFetch';
 import { Alert, Loading, Section } from '../components/ui';
 import Tabs from '../components/Tabs';
+import Icon from '../components/Icon';
 import QrCode from '../components/group/QrCode';
 import LostCardView from '../components/group/LostCardView';
 import MembersTab from '../components/group/MembersTab';
@@ -42,7 +43,9 @@ function InviteCard({ group, setGroup, setError }) {
           <p className="text-xs text-ink-muted">{t('groups.inviteDesc')}</p>
           <p dir="ltr" className="break-all font-mono text-2xl font-bold tracking-[0.15em] text-brand sm:text-3xl sm:tracking-[0.3em]">{group.code}</p>
           <div className="flex flex-wrap gap-2">
-            <button type="button" className="btn-primary !py-1" onClick={copy}>{copied ? t('common.copied') : t('groups.copyLink')}</button>
+            <button type="button" className="btn-primary !px-3 !py-1" onClick={copy} aria-label={copied ? t('common.copied') : t('groups.copyLink')} title={copied ? t('common.copied') : t('groups.copyLink')}>
+              <Icon name={copied ? 'check' : 'copy'} className="h-4 w-4" />
+            </button>
             {group.isLeader && <button type="button" className="btn-secondary !py-1" onClick={newCode}>{t('groups.newCode')}</button>}
           </div>
         </div>
@@ -59,13 +62,16 @@ function CardTab({ group }) {
       <p className="no-print text-center text-sm text-ink-muted">{t('groups.card.desc')}</p>
       <LostCardView card={group.myCard} qrUrl={url} />
       <div className="no-print flex justify-center gap-2">
-        <button type="button" className="btn-gold" onClick={() => window.print()}>🖨️ {t('groups.card.print')}</button>
+        <button type="button" className="btn-gold" onClick={() => window.print()} aria-label={t('groups.card.print')} title={t('groups.card.print')}>
+          <Icon name="print" className="h-4 w-4" />
+        </button>
         <a className="btn-secondary" href={url} target="_blank" rel="noreferrer">{t('groups.card.open')}</a>
       </div>
     </div>
   );
 }
 
+const TAB_ICONS = { members: 'users', meeting: 'pin', card: 'card', settings: 'sliders' };
 const TABS = { members: MembersTab, meeting: MeetingTab, card: CardTab, settings: SettingsTab };
 
 export default function GroupDetail() {
@@ -129,7 +135,7 @@ export default function GroupDetail() {
 
       <div className="no-print">
         <Tabs
-          tabs={Object.keys(TABS).map((key) => ({ key, label: t(`groups.tabs.${key}`) }))}
+          tabs={Object.keys(TABS).map((key) => ({ key, label: t(`groups.tabs.${key}`), icon: TAB_ICONS[key] }))}
           active={tab}
           onChange={(key) => setParams({ tab: key }, { replace: true })}
         />

@@ -13,6 +13,15 @@ import TravellersTab from '../components/trip/TravellersTab';
 import ChecklistTab from '../components/trip/ChecklistTab';
 import { formatDate, formatMoney, formatSAR } from '../utils/format';
 
+const TAB_ICONS = {
+  overview: 'map',
+  prayer: 'moon',
+  guide: 'book',
+  budget: 'wallet',
+  travellers: 'users',
+  checklist: 'check',
+};
+
 const TABS = {
   overview: OverviewTab,
   prayer: PrayerTab,
@@ -82,7 +91,7 @@ export default function TripDetail() {
       <Alert>{error}</Alert>
 
       <Tabs
-        tabs={Object.keys(TABS).map((key) => ({ key, label: t(`trip.tabs.${key}`), badge: key === 'travellers' ? docErrors : 0 }))}
+        tabs={Object.keys(TABS).map((key) => ({ key, label: t(`trip.tabs.${key}`), icon: TAB_ICONS[key], badge: key === 'travellers' ? docErrors : 0 }))}
         active={tab}
         onChange={(key) => setParams({ tab: key }, { replace: true })}
       />
