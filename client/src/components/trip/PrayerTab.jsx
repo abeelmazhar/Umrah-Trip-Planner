@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import api from '../../api/client';
 import CrowdBadge from '../CrowdBadge';
+import { CardSkeleton } from '../ui';
 import { formatDate, formatHijri, isoDay, nightsBetween } from '../../utils/format';
 
 const PRAYERS = ['fajr', 'dhuhr', 'asr', 'maghrib', 'isha'];
@@ -28,7 +29,7 @@ export default function PrayerTab({ trip }) {
       .catch(() => setDays([]));
   }, [trip._id, trip.stays]);
 
-  if (!days) return <p className="text-ink-muted">{t('common.loading')}</p>;
+  if (!days) return <CardSkeleton lines={4} />;
 
   return (
     <section className="card">
@@ -50,7 +51,7 @@ export default function PrayerTab({ trip }) {
                   ))}
                 </div>
               </div>
-              <div className="grid grid-cols-5 gap-1 text-center">
+              <div className="grid grid-cols-2 gap-1 text-center sm:grid-cols-5">
                 {PRAYERS.map((p) => (
                   <div key={p} className="rounded-lg bg-surface p-1.5">
                     <div className="text-[11px] text-ink-muted">{t(`prayers.${p}`)}</div>

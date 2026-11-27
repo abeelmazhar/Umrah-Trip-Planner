@@ -16,9 +16,32 @@ export function Alert({ kind = 'error', children, className = '' }) {
   );
 }
 
-export function Loading() {
+/** Grey block used while a first fetch is in flight. */
+export function Skeleton({ className = '' }) {
+  return <div className={`animate-pulse rounded-lg bg-brand/10 ${className}`} />;
+}
+
+export function CardSkeleton({ lines = 3 }) {
+  return (
+    <div className="card space-y-3" aria-hidden="true">
+      <Skeleton className="h-5 w-1/3" />
+      {Array.from({ length: lines }, (_, i) => (
+        <Skeleton key={i} className={`h-4 ${i === lines - 1 ? 'w-2/3' : 'w-full'}`} />
+      ))}
+    </div>
+  );
+}
+
+/** First-load placeholder. A refresh of data that is already on screen does not use this. */
+export function Loading({ cards = 2, title = true }) {
   const { t } = useTranslation();
-  return <p className="text-ink-muted">{t('common.loading')}</p>;
+  return (
+    <div className="space-y-4" role="status" aria-busy="true" aria-label={t('common.loading')}>
+      <span className="sr-only">{t('common.loading')}</span>
+      {title && <Skeleton className="h-8 w-40 max-w-full" />}
+      {Array.from({ length: cards }, (_, i) => <CardSkeleton key={i} />)}
+    </div>
+  );
 }
 
 /** White card with a heading and an optional action on the other side. */

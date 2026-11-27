@@ -75,14 +75,14 @@ export default function Groups() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-brand">{t('groups.title')}</h1>
+        <h1 className="text-2xl font-bold text-brand sm:text-3xl">{t('groups.title')}</h1>
         <p className="text-sm text-ink-muted">{t('groups.subtitle')}</p>
       </div>
       <Alert>{error}</Alert>
 
       <div className="grid gap-5 lg:grid-cols-5">
         <div className="space-y-4 lg:col-span-3">
-          {loading && <Loading />}
+          {loading && <Loading title={false} cards={1} />}
           {groups?.length === 0 && <div className="card text-center text-ink-muted">{t('groups.empty')}</div>}
           {groups?.map((g) => (
             <Link key={g._id} to={`/groups/${g._id}`} className="card block border-s-4 border-accent transition hover:ring-brand/40">

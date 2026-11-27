@@ -7,8 +7,7 @@
  * departure is taken as 10:00 Saudi time on that day.
  */
 const { prayerTimes } = require('./prayerTimesService');
-
-const RIYADH_MS = 3 * 60 * 60 * 1000;
+const { calendarDay, atRiyadh, riyadhMinutes } = require('../utils/riyadh');
 const MINUTE = 60 * 1000;
 const DAY = 24 * 60 * MINUTE;
 const MEETING_LEAD_MIN = 5;
@@ -64,26 +63,9 @@ function asDate(value) {
   return Number.isNaN(d.getTime()) ? null : d;
 }
 
-/** Calendar day (YYYY-MM-DD) for a UTC-midnight trip date, which is the same day in Riyadh. */
-function calendarDay(value) {
-  const d = asDate(value);
-  return d ? d.toISOString().slice(0, 10) : null;
-}
-
 function shiftDay(day, days) {
   const [y, m, d] = day.split('-').map(Number);
   return new Date(Date.UTC(y, m - 1, d + days)).toISOString().slice(0, 10);
-}
-
-/** A clock time on a calendar day in Asia/Riyadh, as a UTC Date. */
-function atRiyadh(day, hour, minute) {
-  const [y, m, d] = day.split('-').map(Number);
-  return new Date(Date.UTC(y, m - 1, d, hour, minute) - RIYADH_MS);
-}
-
-function riyadhMinutes(date) {
-  const shifted = new Date(date.getTime() + RIYADH_MS);
-  return shifted.getUTCHours() * 60 + shifted.getUTCMinutes();
 }
 
 function formatClock(date) {

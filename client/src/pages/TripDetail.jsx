@@ -59,10 +59,10 @@ export default function TripDetail() {
 
   return (
     <div className="space-y-5">
-      <header className="card flex flex-wrap items-center gap-4 border-s-4 border-accent">
-        <div className="flex-1">
+      <header className="card flex flex-wrap items-start gap-4 border-s-4 border-accent">
+        <div className="min-w-0 flex-1">
           <p className="text-xs font-semibold uppercase tracking-wide text-accent-dark">{route}</p>
-          <h1 className="text-2xl font-bold text-brand">{trip.title || route}</h1>
+          <h1 className="break-words text-xl font-bold text-brand sm:text-2xl">{trip.title || route}</h1>
           <p className="text-sm text-ink-muted">
             {formatDate(trip.startDate, lang)} – {formatDate(trip.endDate, lang)} · {t('dashboard.nights', { count: insights.nights })} ·{' '}
             {t('dashboard.people', { count: trip.people })}
@@ -70,7 +70,7 @@ export default function TripDetail() {
         </div>
         <div className="text-end">
           <p className="text-xs text-ink-muted">{t('trip.totalCost')}</p>
-          <p className="text-2xl font-bold text-brand">{formatSAR(trip.totalCostSAR, lang)}</p>
+          <p className="text-xl font-bold text-brand sm:text-2xl">{formatSAR(trip.totalCostSAR, lang)}</p>
           {insights.homeCurrency.code !== 'SAR' && (
             <p className="text-sm text-ink-muted">≈ {formatMoney(insights.homeCurrency.totalCost, insights.homeCurrency.code, lang)}</p>
           )}
@@ -90,7 +90,7 @@ export default function TripDetail() {
         <TabPanel trip={trip} setTrip={setTrip} setError={setError} />
       </div>
 
-      <div className="flex justify-between">
+      <div className="flex flex-wrap justify-between gap-2">
         <Link to="/" className="btn-secondary">{t('common.back')}</Link>
         <button type="button" onClick={remove} className="btn-danger">{t('trip.delete')}</button>
       </div>

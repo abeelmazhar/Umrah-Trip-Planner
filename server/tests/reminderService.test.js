@@ -1,15 +1,9 @@
 const { prayerTimes } = require('../src/services/prayerTimesService');
 const { buildReminders, DEFAULT_PREFS } = require('../src/services/reminderService');
 const { parsePrefs } = require('../src/services/notificationService');
+const { atRiyadh } = require('../src/utils/riyadh');
 
 const USER = 'user1';
-const RIYADH_MS = 3 * 60 * 60 * 1000;
-
-/** Clock time in Asia/Riyadh as a UTC Date. */
-function atRiyadh(day, hour, minute) {
-  const [y, m, d] = day.split('-').map(Number);
-  return new Date(Date.UTC(y, m - 1, d, hour, minute) - RIYADH_MS);
-}
 
 function prefs(overrides = {}) {
   return {

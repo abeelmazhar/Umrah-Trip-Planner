@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import useMeta from '../hooks/useMeta';
 import useFetch from '../hooks/useFetch';
-import { Loading } from '../components/ui';
+import { CardSkeleton } from '../components/ui';
 import { Stepper } from '../components/wizard/common';
 import BasicsStep from '../components/wizard/BasicsStep';
 import ItineraryStep from '../components/wizard/ItineraryStep';
@@ -41,7 +41,7 @@ export default function NewTrip() {
 
   return (
     <div className="mx-auto max-w-3xl">
-      <h1 className="mb-4 text-3xl font-bold text-brand">{t('wizard.title')}</h1>
+      <h1 className="mb-4 text-2xl font-bold text-brand sm:text-3xl">{t('wizard.title')}</h1>
       <div className="card">
         <Stepper step={step} />
         {meta ? (
@@ -54,7 +54,7 @@ export default function NewTrip() {
             onNext={step < STEP_COMPONENTS.length - 1 ? go(step + 1) : undefined}
           />
         ) : (
-          <Loading />
+          <CardSkeleton lines={4} />
         )}
       </div>
     </div>

@@ -7,13 +7,7 @@ const {
   buildRequest,
   DEFAULT_MODEL,
 } = require('../src/services/assistantService');
-
-const RIYADH_MS = 3 * 60 * 60 * 1000;
-
-function atRiyadh(day, hour, minute) {
-  const [y, m, d] = day.split('-').map(Number);
-  return new Date(Date.UTC(y, m - 1, d, hour, minute) - RIYADH_MS);
-}
+const { atRiyadh } = require('../src/utils/riyadh');
 
 function turn(role, content) {
   return { role, content };

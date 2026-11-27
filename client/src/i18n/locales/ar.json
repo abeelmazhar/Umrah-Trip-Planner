@@ -28,7 +28,8 @@
     "register": "إنشاء حساب",
     "groups": "المجموعات",
     "reminders": "التذكيرات",
-    "assistant": "اسأل المساعد"
+    "assistant": "اسأل المساعد",
+    "menu": "القائمة"
   },
   "auth": {
     "loginTitle": "مرحبًا بعودتك",

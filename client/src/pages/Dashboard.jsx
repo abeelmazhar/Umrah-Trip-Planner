@@ -56,13 +56,13 @@ export default function Dashboard() {
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <p className="text-sm text-ink-muted">{t('dashboard.greeting', { name: user?.name })}</p>
-          <h1 className="text-3xl font-bold text-brand">{t('dashboard.title')}</h1>
+          <h1 className="text-2xl font-bold text-brand sm:text-3xl">{t('dashboard.title')}</h1>
         </div>
         <Link to="/trips/new" className="btn-gold">+ {t('nav.newTrip')}</Link>
       </div>
 
       <Alert>{error}</Alert>
-      {loading && <Loading />}
+      {loading && <Loading title={false} />}
 
       {trips?.length === 0 && (
         <div className="card">

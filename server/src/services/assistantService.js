@@ -5,8 +5,7 @@ const AssistantUsage = require('../models/AssistantUsage');
 const AssistantFeedback = require('../models/AssistantFeedback');
 const { SYSTEM_PROMPT, buildTripContext } = require('./assistantPrompt');
 const { httpError, assertId, cleanString } = require('../utils/http');
-
-const RIYADH_MS = 3 * 60 * 60 * 1000;
+const { riyadhDay } = require('../utils/riyadh');
 const REFUSAL_TEXT = "I can't help with that here. Please ask a scholar or the Haram guidance desk.";
 const DEFAULT_MODEL = 'claude-opus-5-5';
 
@@ -51,11 +50,6 @@ function toApiMessages(history, question) {
     messages.push({ role: 'user', content: question });
   }
   return messages.map((message) => ({ role: message.role, content: message.content }));
-}
-
-/** YYYY-MM-DD in Asia/Riyadh (UTC+3, no daylight saving). */
-function riyadhDay(date) {
-  return new Date(date.getTime() + RIYADH_MS).toISOString().slice(0, 10);
 }
 
 function checkQuota(usageCount, limit) {

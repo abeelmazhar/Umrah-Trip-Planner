@@ -28,7 +28,8 @@
     "register": "Sign up",
     "groups": "Groups",
     "reminders": "Reminders",
-    "assistant": "Ask the assistant"
+    "assistant": "Ask the assistant",
+    "menu": "Menu"
   },
   "auth": {
     "loginTitle": "Welcome back",

@@ -12,7 +12,7 @@ function Row({ en, ar, children }) {
         <p className="text-[11px] font-semibold uppercase tracking-wide text-ink-muted">
           {en} · <span lang="ar">{ar}</span>
         </p>
-        <div className="font-semibold">{children}</div>
+        <div className="break-words font-semibold">{children}</div>
       </div>
     </div>
   );

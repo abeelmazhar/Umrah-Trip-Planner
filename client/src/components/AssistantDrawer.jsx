@@ -4,7 +4,7 @@ import api, { errorMessage } from '../api/client';
 import useFetch from '../hooks/useFetch';
 import useAssistantChat from '../hooks/useAssistantChat';
 import { useAssistantDrawer } from '../context/AssistantDrawerContext';
-import { Alert, Loading } from './ui';
+import { Alert, CardSkeleton } from './ui';
 import { formatDate } from '../utils/format';
 
 const SUGGESTIONS = ['wudu', 'quba', 'fajr', 'miqat', 'ihram'];
@@ -95,7 +95,7 @@ export default function AssistantDrawer() {
 
       <div className="min-h-0 flex-1 space-y-3 overflow-y-auto px-4 py-3">
         <Alert kind="warning">{t('assistant.disclaimer')}</Alert>
-        {open && enabled === null && <Loading />}
+        {open && enabled === null && <CardSkeleton lines={4} />}
         {enabled === false && <Alert kind="info">{t('assistant.unavailable')}</Alert>}
         {error && <Alert>{error}</Alert>}
         {voteError && <Alert>{voteError}</Alert>}

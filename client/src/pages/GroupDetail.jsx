@@ -40,7 +40,7 @@ function InviteCard({ group, setGroup, setError }) {
         <QrCode value={link} size={112} label={t('groups.invite')} />
         <div className="space-y-2">
           <p className="text-xs text-ink-muted">{t('groups.inviteDesc')}</p>
-          <p dir="ltr" className="font-mono text-3xl font-bold tracking-[0.3em] text-brand">{group.code}</p>
+          <p dir="ltr" className="break-all font-mono text-2xl font-bold tracking-[0.15em] text-brand sm:text-3xl sm:tracking-[0.3em]">{group.code}</p>
           <div className="flex flex-wrap gap-2">
             <button type="button" className="btn-primary !py-1" onClick={copy}>{copied ? t('common.copied') : t('groups.copyLink')}</button>
             {group.isLeader && <button type="button" className="btn-secondary !py-1" onClick={newCode}>{t('groups.newCode')}</button>}

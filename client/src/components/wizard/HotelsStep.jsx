@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { Loading, OptionButton } from '../ui';
+import { CardSkeleton, OptionButton } from '../ui';
 import { WizardNav } from './common';
 import { formatDate, formatSAR, nightsBetween } from '../../utils/format';
 
@@ -10,7 +10,7 @@ export default function HotelsStep({ form, update, hotels, onBack, onNext }) {
   const rooms = Math.ceil(form.people / 2);
   const choose = (i, hotelId) => update({ stays: form.stays.map((s, j) => (j === i ? { ...s, hotelId } : s)) });
 
-  if (!hotels) return <Loading />;
+  if (!hotels) return <CardSkeleton lines={4} />;
 
   return (
     <div className="space-y-6">

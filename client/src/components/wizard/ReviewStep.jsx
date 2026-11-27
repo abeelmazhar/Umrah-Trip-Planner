@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import api, { errorMessage } from '../../api/client';
 import MiqatCard from '../MiqatCard';
-import { Alert, Loading } from '../ui';
+import { Alert, CardSkeleton } from '../ui';
 import { WizardNav } from './common';
 import { formatDate, formatMoney, formatSAR } from '../../utils/format';
 import { transfersNeeded } from '../../utils/itinerary';
@@ -11,8 +11,8 @@ import { transfersNeeded } from '../../utils/itinerary';
 function Row({ label, children, strong, sub }) {
   return (
     <div className={`flex justify-between gap-4 py-2 ${strong ? 'text-lg font-bold text-brand' : ''}`}>
-      <dt className={strong ? '' : 'text-ink-muted'}>{label}</dt>
-      <dd className="text-end">
+      <dt className={`min-w-0 ${strong ? '' : 'text-ink-muted'}`}>{label}</dt>
+      <dd className="min-w-0 break-words text-end">
         {children}
         {sub && <span className="block text-xs font-normal text-ink-muted">{sub}</span>}
       </dd>
@@ -42,7 +42,18 @@ export default function ReviewStep({ form, onBack }) {
   );
 
   useEffect(() => {
-    api.post('/trips/quote', payload).then((r) => setQuote(r.data)).catch((err) => setError(errorMessage(err, t('common.error'))));
+    let current = true;
+    api
+      .post('/trips/quote', payload)
+      .then((r) => {
+        if (current) setQuote(r.data);
+      })
+      .catch((err) => {
+        if (current) setError(errorMessage(err, t('common.error')));
+      });
+    return () => {
+      current = false;
+    };
   }, [payload, t]);
 
   const save = async () => {
@@ -60,7 +71,7 @@ export default function ReviewStep({ form, onBack }) {
   return (
     <div className="space-y-5">
       <Alert>{error}</Alert>
-      {!quote && !error && <Loading />}
+      {!quote && !error && <CardSkeleton lines={5} />}
       {quote && (
         <>
           <dl className="divide-y divide-black/5">

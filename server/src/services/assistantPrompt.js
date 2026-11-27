@@ -1,6 +1,5 @@
 const { prayerTimes } = require('./prayerTimesService');
-
-const RIYADH_MS = 3 * 60 * 60 * 1000;
+const { calendarDay, riyadhDay } = require('../utils/riyadh');
 
 /**
  * Stable instructions. No dates and no user data, so the provider can cache this block.
@@ -16,22 +15,6 @@ const SYSTEM_PROMPT = [
   'Stay on topic. Politely decline unrelated requests (coding, politics, and similar). Do not ask for or repeat passport numbers or other personal documents.',
   'If you do not know, say so and suggest who to ask.',
 ].join('\n\n');
-
-function asDate(value) {
-  if (!value) return null;
-  const d = value instanceof Date ? value : new Date(value);
-  return Number.isNaN(d.getTime()) ? null : d;
-}
-
-/** Calendar day for a stored trip date (UTC midnight is the same day in Riyadh). */
-function calendarDay(value) {
-  const d = asDate(value);
-  return d ? d.toISOString().slice(0, 10) : null;
-}
-
-function riyadhDay(date) {
-  return new Date(date.getTime() + RIYADH_MS).toISOString().slice(0, 10);
-}
 
 function monthShort(iso) {
   const [y, m, d] = iso.split('-').map(Number);
