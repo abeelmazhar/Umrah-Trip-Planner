@@ -1,4 +1,5 @@
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { useAssistantDrawer } from '../context/AssistantDrawerContext';
 import { useTranslation } from 'react-i18next';
 import api, { errorMessage } from '../api/client';
 import useFetch from '../hooks/useFetch';
@@ -26,6 +27,7 @@ export default function TripDetail() {
   const { t, i18n } = useTranslation();
   const lang = i18n.language;
   const navigate = useNavigate();
+  const { openDrawer } = useAssistantDrawer();
   const [params, setParams] = useSearchParams();
   const tab = TABS[params.get('tab')] ? params.get('tab') : 'overview';
   const { data: trip, setData: setTrip, error, setError, status, loading } = useFetch(`/trips/${id}`);
@@ -75,7 +77,7 @@ export default function TripDetail() {
         </div>
       </header>
 
-      <Link to={`/assistant?trip=${id}`} className="btn-primary">{t('assistant.ask')}</Link>
+      <button type="button" className="btn-primary" onClick={() => openDrawer(id)}>{t('assistant.ask')}</button>
 
       <Alert>{error}</Alert>
 

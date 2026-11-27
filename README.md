@@ -231,13 +231,13 @@ Locally, `server/src/index.js` calls `runDueNotifications` every 60 seconds, so 
 
 ## AI Pilgrim Assistant
 
-A logged-in page at `/assistant` where a pilgrim asks practical questions (wudu during Tawaf, the way to Masjid Quba, when to leave for Fajr). The reply is in the language of the question. If a trip is selected, the answer can use that trip's cities, dates, hotels, transfers, today's prayer times, and Umrah progress.
+A chat panel on the right of every logged-in page. The **Ask the assistant** button in the corner opens and closes it, and the same button on a trip opens the panel with that trip selected. The reply is in the language of the question. If a trip is selected, the answer can use that trip's cities, dates, hotels, transfers, today's prayer times, and Umrah progress.
 
 Every answer is **guidance, not a fatwa**. The page says so, and religious answers tell the user to confirm with a qualified scholar or the Haram guidance desks. A medical emergency is answered by telling the user to call **911** or **997**.
 
 **Privacy.** The Claude API receives the question, recent chat, and a short trip summary (city, hotel name, distance to the Haram, dates, transfer mode, prayer times, ihram / Tawaf / Sa'i progress, and the app language). It does **not** receive traveller names, passport dates, phone numbers, or emails. The API key stays on the server.
 
-**Cost controls.** Each user gets `ASSISTANT_DAILY_LIMIT` questions per Saudi day (default 30). Answers are asked to stay around 150 words, with `output_config.effort` set to `low` and a short `max_tokens`. The system prompt is a constant, marked for prompt caching, and the trip block sits after that cache breakpoint. Chat is also limited to 10 requests per IP per minute. Without `ANTHROPIC_API_KEY` the routes that call Claude return `503` and the nav link stays hidden.
+**Cost controls.** Each user gets `ASSISTANT_DAILY_LIMIT` questions per Saudi day (default 30). Answers are asked to stay around 150 words, with `output_config.effort` set to `low` and a short `max_tokens`. The system prompt is a constant, marked for prompt caching, and the trip block sits after that cache breakpoint. Chat is also limited to 10 requests per IP per minute. Without `ANTHROPIC_API_KEY` the routes that call Claude return `503`. The panel still opens and explains that, and sending a question waits until the key is set.
 
 Create a key at [console.anthropic.com](https://console.anthropic.com/), then set `ANTHROPIC_API_KEY` in `server/.env` (and on the Vercel API project). `ASSISTANT_MODEL` defaults to `claude-opus-5-5`. Redeploy the API after saving the variables. The browser does not need a new env var.
 

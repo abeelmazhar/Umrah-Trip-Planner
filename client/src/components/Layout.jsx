@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
-import api from '../api/client';
+import { AssistantDrawerProvider, useAssistantDrawer } from '../context/AssistantDrawerContext';
+import AssistantDrawer from './AssistantDrawer';
 import LanguageSwitcher from './LanguageSwitcher';
 
 const navClass = ({ isActive }) =>
@@ -11,28 +11,18 @@ const navClass = ({ isActive }) =>
   }`;
 
 export default function Layout() {
+  return (
+    <AssistantDrawerProvider>
+      <LayoutShell />
+    </AssistantDrawerProvider>
+  );
+}
+
+function LayoutShell() {
   const { t } = useTranslation();
   const { user, logout } = useAuth();
   const navigate = useNavigate();
-  const [assistantEnabled, setAssistantEnabled] = useState(false);
-
-  useEffect(() => {
-    if (!user) {
-      setAssistantEnabled(false);
-      return undefined;
-    }
-    let active = true;
-    api.get('/assistant/status')
-      .then((res) => {
-        if (active) setAssistantEnabled(Boolean(res.data.enabled));
-      })
-      .catch(() => {
-        if (active) setAssistantEnabled(false);
-      });
-    return () => {
-      active = false;
-    };
-  }, [user]);
+  const { open, toggleDrawer } = useAssistantDrawer();
 
   const handleLogout = () => {
     logout();
@@ -57,11 +47,6 @@ export default function Layout() {
                 <NavLink to="/groups" className={navClass}>
                   {t('nav.groups')}
                 </NavLink>
-                {assistantEnabled && (
-                  <NavLink to="/assistant" className={navClass}>
-                    {t('nav.assistant')}
-                  </NavLink>
-                )}
                 <NavLink to="/settings/notifications" className={navClass}>
                   {t('nav.reminders')}
                 </NavLink>
@@ -91,6 +76,22 @@ export default function Layout() {
         <Outlet />
       </main>
       <footer className="no-print py-6 text-center text-xs text-ink-muted">{t('app.tagline')}</footer>
+      {user && (
+        <>
+          {!open && (
+            <button
+              type="button"
+              className="no-print fixed bottom-5 end-5 z-40 flex items-center gap-2 rounded-full bg-brand px-4 py-3 text-sm font-semibold text-white shadow-lg hover:bg-brand-dark"
+              onClick={toggleDrawer}
+              aria-expanded={false}
+            >
+              <span aria-hidden="true">💬</span>
+              {t('nav.assistant')}
+            </button>
+          )}
+          <AssistantDrawer />
+        </>
+      )}
     </div>
   );
 }

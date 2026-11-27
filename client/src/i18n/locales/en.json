@@ -439,6 +439,7 @@
   },
   "assistant": {
     "ask": "Ask the assistant",
+    "close": "Close",
     "disclaimer": "AI guidance, not a fatwa. For religious rulings, ask a qualified scholar. In an emergency call 911.",
     "unavailable": "The assistant is not available until an API key is configured on the server.",
     "trip": "Use a trip for context",
