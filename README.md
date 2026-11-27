@@ -237,7 +237,7 @@ Every answer is **guidance, not a fatwa**. The page says so, and religious answe
 
 **Privacy.** The server sends the question, recent chat, and a short trip summary to OpenRouter (city, hotel name, distance to the Haram, dates, transfer mode, prayer times, ihram / Tawaf / Sa'i progress, and the app language). OpenRouter forwards that to the model named in `ASSISTANT_MODEL`. The request does **not** include traveller names, passport dates, phone numbers, or emails. The API key stays on the server.
 
-**Cost controls.** Each user gets `ASSISTANT_DAILY_LIMIT` questions per Saudi day (default 30). Answers are asked to stay around 150 words, and `max_tokens` is 4096. Chat is also limited to 10 requests per IP per minute. Without `OPENROUTER_API_KEY` the chat route returns `503`. The panel still opens and explains that, and sending a question waits until the key is set.
+**Cost controls.** Each user gets `ASSISTANT_DAILY_LIMIT` questions per Saudi day (default 30). Answers are asked to stay around 150 words, and `max_tokens` is 1024. Chat is also limited to 10 requests per IP per minute. Without `OPENROUTER_API_KEY` the chat route returns `503`. The panel still opens and explains that, and sending a question waits until the key is set.
 
 Create a key at [openrouter.ai/keys](https://openrouter.ai/keys), then set `OPENROUTER_API_KEY` in `server/.env` (and on the Vercel API project). `ASSISTANT_MODEL` defaults to `anthropic/claude-opus-5.5`. Any model id from the OpenRouter catalog works. Redeploy the API after saving the variables. The browser does not need a new env var.
 

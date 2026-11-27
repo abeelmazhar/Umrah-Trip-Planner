@@ -15,6 +15,7 @@ function sendEvent(res, event, data) {
 }
 
 function safeStreamError(err) {
+  if (err.status === 402) return 'The assistant is out of credit. Add credits in OpenRouter, then try again.';
   if (err.status === 429) return 'The assistant is busy, please try again in a minute';
   if (err.status === 401 || err.status === 403) {
     console.error('Assistant authentication failed');

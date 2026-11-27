@@ -74,7 +74,7 @@ function appLanguage(value) {
 function buildRequest({ system, context, messages, model }) {
   return {
     model: model || DEFAULT_MODEL,
-    max_tokens: 4096,
+    max_tokens: 1024,
     messages: [
       { role: 'system', content: `${system}\n\n<trip_context>\n${context}\n</trip_context>` },
       ...messages,

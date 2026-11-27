@@ -134,7 +134,7 @@ describe('assistant chat rules', () => {
     });
     expect(params.model).toBe(DEFAULT_MODEL);
     expect(params.model).toBe('anthropic/claude-opus-5.5');
-    expect(params.max_tokens).toBe(4096);
+    expect(params.max_tokens).toBe(1024);
     expect(params.messages[0].role).toBe('system');
     expect(params.messages[0].content).toContain(SYSTEM_PROMPT);
     expect(params.messages[0].content).toContain('<trip_context>');
