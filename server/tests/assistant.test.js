@@ -126,25 +126,21 @@ describe('assistant chat rules', () => {
     expect(riyadhDay(new Date('2026-01-01T23:30:00Z'))).toBe('2026-01-02');
   });
 
-  test('buildRequest caches only the first system block and omits sampling keys', () => {
+  test('buildRequest sends one system message and omits sampling keys', () => {
     const params = buildRequest({
       system: SYSTEM_PROMPT,
       context: 'App language: en',
       messages: [{ role: 'user', content: 'Hi' }],
     });
     expect(params.model).toBe(DEFAULT_MODEL);
-    expect(params.model).toBe('claude-opus-5-5');
-    expect(params.system[0].cache_control).toEqual({ type: 'ephemeral' });
-    expect(params.system[1].cache_control).toBeUndefined();
-    expect(params.system[1].text).toContain('<trip_context>');
-    expect(params.fallbacks).toBe('default');
-    expect(params.betas).toEqual(['server-side-fallback-2026-07-01']);
-    expect(params.thinking).toBeUndefined();
+    expect(params.model).toBe('anthropic/claude-opus-5.5');
+    expect(params.max_tokens).toBe(4096);
+    expect(params.messages[0].role).toBe('system');
+    expect(params.messages[0].content).toContain(SYSTEM_PROMPT);
+    expect(params.messages[0].content).toContain('<trip_context>');
+    expect(params.messages[1]).toEqual({ role: 'user', content: 'Hi' });
     expect(params.temperature).toBeUndefined();
     expect(params.top_p).toBeUndefined();
     expect(params.top_k).toBeUndefined();
-    expect(params.budget_tokens).toBeUndefined();
-    expect(params.output_config).toEqual({ effort: 'low' });
-    expect(Object.hasOwn(params, 'thinking')).toBe(false);
   });
 });

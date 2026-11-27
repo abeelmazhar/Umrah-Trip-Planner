@@ -1,4 +1,4 @@
-const claudeClient = require('../services/claudeClient');
+const openRouterClient = require('../services/openRouterClient');
 const {
   REFUSAL_TEXT,
   statusFor,
@@ -15,19 +15,12 @@ function sendEvent(res, event, data) {
 }
 
 function safeStreamError(err) {
-  const Anthropic = claudeClient.sdk();
-  if (err instanceof Anthropic.RateLimitError) {
-    return 'The assistant is busy, please try again in a minute';
-  }
-  if (err instanceof Anthropic.AuthenticationError || err instanceof Anthropic.PermissionDeniedError) {
+  if (err.status === 429) return 'The assistant is busy, please try again in a minute';
+  if (err.status === 401 || err.status === 403) {
     console.error('Assistant authentication failed');
     return 'Assistant is not available';
   }
-  if (err instanceof Anthropic.APIError) {
-    console.error('Assistant request failed', err.status || err.constructor?.name);
-    return 'The assistant could not answer just now. Please try again.';
-  }
-  console.error('Assistant request failed', err.status || err.constructor?.name || err.name);
+  console.error('Assistant request failed', err.status || err.name);
   return 'The assistant could not answer just now. Please try again.';
 }
 
@@ -65,7 +58,7 @@ async function feedback(req, res) {
 
 // POST /api/assistant/chat  → text/event-stream
 async function chat(req, res) {
-  if (!process.env.ANTHROPIC_API_KEY) return notConfigured(res);
+  if (!process.env.OPENROUTER_API_KEY) return notConfigured(res);
 
   let started = false;
   let finished = false;
@@ -86,7 +79,7 @@ async function chat(req, res) {
     res.flushHeaders();
     started = true;
 
-    const stream = claudeClient.streamAnswer(prepared.params);
+    const stream = openRouterClient.streamAnswer(prepared.params);
     const stopIfGone = () => {
       if (!finished) {
         try { stream.abort(); } catch { /* already closed */ }

@@ -1,13 +1,13 @@
-// Assistant chat: auth, quota, and a fake Claude stream. No real API calls.
+// Assistant chat: auth, quota, and a fake OpenRouter stream. No real API calls.
 const { describe, test, before, after } = require('node:test');
 const { expect } = require('./expect');
 const { app, request, startDb, stopDb, register, auth } = require('./setup');
 const AssistantConversation = require('../../src/models/AssistantConversation');
 const AssistantUsage = require('../../src/models/AssistantUsage');
-const claudeClient = require('../../src/services/claudeClient');
+const openRouterClient = require('../../src/services/openRouterClient');
 const { resetAssistantChatLimit } = require('../../src/middleware/assistantRateLimit');
 
-const originalStream = claudeClient.streamAnswer;
+const originalStream = openRouterClient.streamAnswer;
 let nextMessage = { stop_reason: 'end_turn', usage: { input_tokens: 12, output_tokens: 7, cache_read_input_tokens: 3 } };
 let nextDeltas = ['Walk ', 'to the Haram.'];
 
@@ -47,15 +47,15 @@ function eventsOf(text) {
 
 before(async () => {
   await startDb();
-  process.env.ANTHROPIC_API_KEY = '';
+  process.env.OPENROUTER_API_KEY = '';
   process.env.ASSISTANT_DAILY_LIMIT = '30';
-  process.env.ASSISTANT_MODEL = 'claude-opus-5-5';
-  claudeClient.streamAnswer = () => fakeStream();
+  process.env.ASSISTANT_MODEL = 'anthropic/claude-opus-5.5';
+  openRouterClient.streamAnswer = () => fakeStream();
   resetAssistantChatLimit();
 });
 
 after(async () => {
-  claudeClient.streamAnswer = originalStream;
+  openRouterClient.streamAnswer = originalStream;
   await stopDb();
 });
 
@@ -66,7 +66,7 @@ describe('assistant', () => {
   });
 
   test('returns 503 when the API key is unset', async () => {
-    delete process.env.ANTHROPIC_API_KEY;
+    delete process.env.OPENROUTER_API_KEY;
     const token = await register('assistant-off@test.dev');
     const res = await request(app).post('/api/assistant/chat').set(auth(token)).send({ question: 'Hello there' });
     expect(res.status).toBe(503);
@@ -74,11 +74,11 @@ describe('assistant', () => {
     const status = await request(app).get('/api/assistant/status').set(auth(token));
     expect(status.status).toBe(200);
     expect(status.body.enabled).toBe(false);
-    process.env.ANTHROPIC_API_KEY = 'test-key';
+    process.env.OPENROUTER_API_KEY = 'test-key';
   });
 
   test('returns 404 for someone else\'s trip and 400 for an empty question', async () => {
-    process.env.ANTHROPIC_API_KEY = 'test-key';
+    process.env.OPENROUTER_API_KEY = 'test-key';
     const owner = await register('assistant-owner@test.dev');
     const other = await register('assistant-other@test.dev');
     const hotels = await request(app).get('/api/hotels?city=Makkah');
@@ -102,7 +102,7 @@ describe('assistant', () => {
   });
 
   test('streams delta events then done, and saves the messages and usage', async () => {
-    process.env.ANTHROPIC_API_KEY = 'test-key';
+    process.env.OPENROUTER_API_KEY = 'test-key';
     nextDeltas = ['Walk ', 'to the Haram.'];
     nextMessage = { stop_reason: 'end_turn', usage: { input_tokens: 12, output_tokens: 7, cache_read_input_tokens: 3 } };
     const token = await register('assistant-stream@test.dev', 'Noor');
@@ -130,7 +130,7 @@ describe('assistant', () => {
   });
 
   test('returns 429 after the daily limit', async () => {
-    process.env.ANTHROPIC_API_KEY = 'test-key';
+    process.env.OPENROUTER_API_KEY = 'test-key';
     process.env.ASSISTANT_DAILY_LIMIT = '1';
     const token = await register('assistant-limit@test.dev');
     const first = await request(app).post('/api/assistant/chat').set(auth(token)).send({ question: 'What is ihram?' });
@@ -142,7 +142,7 @@ describe('assistant', () => {
   });
 
   test('a refusal stop reason sends the refusal event and saves the friendly text', async () => {
-    process.env.ANTHROPIC_API_KEY = 'test-key';
+    process.env.OPENROUTER_API_KEY = 'test-key';
     nextDeltas = [];
     nextMessage = { stop_reason: 'refusal', usage: { input_tokens: 4, output_tokens: 1, cache_read_input_tokens: 0 } };
     const token = await register('assistant-refusal@test.dev');

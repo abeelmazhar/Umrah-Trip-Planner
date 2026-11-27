@@ -7,7 +7,7 @@ const { SYSTEM_PROMPT, buildTripContext } = require('./assistantPrompt');
 const { httpError, assertId, cleanString } = require('../utils/http');
 const { riyadhDay } = require('../utils/riyadh');
 const REFUSAL_TEXT = "I can't help with that here. Please ask a scholar or the Haram guidance desk.";
-const DEFAULT_MODEL = 'claude-opus-5-5';
+const DEFAULT_MODEL = 'anthropic/claude-opus-5.5';
 
 function validateQuestion(text) {
   const question = typeof text === 'string' ? text.trim() : '';
@@ -75,14 +75,10 @@ function buildRequest({ system, context, messages, model }) {
   return {
     model: model || DEFAULT_MODEL,
     max_tokens: 4096,
-    output_config: { effort: 'low' },
-    betas: ['server-side-fallback-2026-07-01'],
-    fallbacks: 'default',
-    system: [
-      { type: 'text', text: system, cache_control: { type: 'ephemeral' } },
-      { type: 'text', text: `<trip_context>\n${context}\n</trip_context>` },
+    messages: [
+      { role: 'system', content: `${system}\n\n<trip_context>\n${context}\n</trip_context>` },
+      ...messages,
     ],
-    messages,
   };
 }
 
@@ -101,7 +97,7 @@ function tripFilter(userId, trip) {
 async function statusFor(userId, now = new Date()) {
   const usage = await AssistantUsage.findOne({ userId, day: riyadhDay(now) });
   return {
-    enabled: Boolean(process.env.ANTHROPIC_API_KEY),
+    enabled: Boolean(process.env.OPENROUTER_API_KEY),
     dailyLimit: dailyLimit(),
     usedToday: usage?.count || 0,
   };
@@ -119,7 +115,7 @@ async function clearConversation(userId, tripId) {
 }
 
 async function prepareChat({ userId, question, tripId, language, now = new Date() }) {
-  if (!process.env.ANTHROPIC_API_KEY) throw httpError(503, 'Assistant is not configured');
+  if (!process.env.OPENROUTER_API_KEY) throw httpError(503, 'Assistant is not configured');
   const text = validateQuestion(question);
   const trip = await loadOwnTrip(userId, tripId);
   const day = riyadhDay(now);

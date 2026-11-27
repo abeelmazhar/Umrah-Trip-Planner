@@ -2,7 +2,7 @@ const { prayerTimes } = require('./prayerTimesService');
 const { calendarDay, riyadhDay } = require('../utils/riyadh');
 
 /**
- * Stable instructions. No dates and no user data, so the provider can cache this block.
+ * Stable instructions. No dates and no user data.
  */
 const SYSTEM_PROMPT = [
   'You are the Umrah Trip Planner assistant. You help pilgrims with practical questions about Umrah, Makkah, Madinah, travel in Saudi Arabia, and using this app.',
